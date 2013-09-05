@@ -1,1 +1,6 @@
 http://www.google.com/finance?q=600016
+http://www.google.com/finance/historical?cid=694653&startdate=Mar+25%2C+2007&enddate=Mar+24%2C+2010&output=csv
+http://hq.sinajs.cn/list=sh600016
+http://finance.google.com/finance/info?client=ig&q=600016
+http://www.gummy-stuff.org/Yahoo-data.htm
+https://developers.google.com/apps-script/reference/finance/?csw=1
