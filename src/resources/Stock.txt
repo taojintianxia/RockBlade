@@ -4,3 +4,8 @@ http://hq.sinajs.cn/list=sh600016
 http://finance.google.com/finance/info?client=ig&q=600016
 http://www.gummy-stuff.org/Yahoo-data.htm
 https://developers.google.com/apps-script/reference/finance/?csw=1
+
+
+
+
+http://www.cnblogs.com/luluping/archive/2010/11/15/1877817.html
