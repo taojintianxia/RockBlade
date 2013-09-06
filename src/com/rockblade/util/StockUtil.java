@@ -13,7 +13,7 @@ public class StockUtil {
 	public enum StockURL {
 
 		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="),
-		STOCK_RESOURCES_PROPERTIES_FILE("/resources/stock_resources.properties"),
+		STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"),
 		KEY_FRO_STOCK_IN_RESOURCES("stock_url");
 
 		private String context;
