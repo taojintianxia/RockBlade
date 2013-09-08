@@ -14,7 +14,9 @@ public class StockUtil {
 
 		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="),
 		STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"),
-		KEY_FRO_STOCK_IN_RESOURCES("stock_url");
+		KEY_FRO_STOCK_IN_RESOURCES("stock_url"),
+		SINA_SITE("hq.sinajs.cn"),
+		GOOGLE_SITE("");
 
 		private String context;
 

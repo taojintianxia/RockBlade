@@ -1,7 +1,8 @@
 package com.rockblade.sevlet;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,19 +39,24 @@ public class URLAnalyzer {
 		try {
 			URL url = new URL(StockServerFetchFactory.fetchStockURL() + stockId);
 			URLConnection urlConnection = url.openConnection();
-			DataInputStream dataInput = new DataInputStream(urlConnection.getInputStream());
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					urlConnection.getInputStream(), "GBK");
+			BufferedReader bufferReader = new BufferedReader(inputStreamReader);
 			String inputLine;
-			dataInput.readUTF();
-			if ((inputLine = dataInput.readUTF()) != null) {
+			if ((inputLine = bufferReader.readLine()) != null) {
 				data = inputLine;
 			}
-			dataInput.close();
+			bufferReader.close();
 		} catch (MalformedURLException me) {
 			//
 		} catch (IOException ioe) {
 			//
 		}
 		System.out.println(data);
+	}
+	
+	private static void parseURLDataForSina(String data){
+		
 	}
 
 }
