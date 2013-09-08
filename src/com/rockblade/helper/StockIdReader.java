@@ -26,7 +26,8 @@ public class StockIdReader {
 			BufferedReader bufferedReaderForSZ = new BufferedReader(new FileReader(SZStockFile));
 
 			while ((readLine = bufferedReaderForSH.readLine()) != null) {
-				stockArray = readLine.split(" ");
+				stockArray[1] = new String(readLine.substring(readLine.lastIndexOf(" ") + 1));
+				stockArray[0] = new String(readLine.substring(0, readLine.lastIndexOf(" ") - 1));
 				SHStockMap.put(stockArray[1], stockArray[0]);
 			}
 

@@ -27,10 +27,10 @@ import com.rockblade.util.StockUtil;
 public class URLAnalyzer {
 
 	public static void main(String... args) {
+
 		for (int i = 0; i < 10; i++) {
 			Map<String, Long> stockMap = new HashMap<>();
-			parseByAmount(parseURLData("sh600016"), stockMap);
-			stockMap.put(i + "", (long) i);
+			parseURLData("sh600631", stockMap);
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
@@ -48,7 +48,7 @@ public class URLAnalyzer {
 		return stockMap;
 	}
 
-	private static String parseURLData(String stockId) {
+	public static void parseURLData(String stockId, Map<String, Long> stockAmountMap) {
 		String data = "";
 		try {
 			URL url = new URL(StockServerFetchFactory.fetchStockURL() + stockId);
@@ -67,7 +67,7 @@ public class URLAnalyzer {
 			//
 		}
 
-		return data;
+		parseByAmount(data, stockAmountMap);
 	}
 
 	private static Stock chooseParser(String stockDataStr) throws ParseException {
@@ -77,10 +77,15 @@ public class URLAnalyzer {
 		return parseURLDataForSina(stockDataStr);
 	}
 
-	private static void parseByAmount(String data, Map<String, Long> stockAmountMap) {
+	public static void parseByAmount(String data, Map<String, Long> stockAmountMap) {
 		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
 		List<String> dataList = Arrays.asList(usefulData.split(","));
-		stockAmountMap.put(dataList.get(31), Long.parseLong(dataList.get(9)));
+		// maybe Suspension
+		if ("".equals(usefulData)) {
+			stockAmountMap.clear();
+		} else {
+			stockAmountMap.put(dataList.get(31), Long.parseLong(dataList.get(9)));
+		}
 	}
 
 	private static void parseByTransaction(String data, Map<String, Long> stockTransactionVolumeMap) {
