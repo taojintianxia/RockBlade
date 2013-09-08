@@ -27,7 +27,17 @@ import com.rockblade.util.StockUtil;
 public class URLAnalyzer {
 
 	public static void main(String... args) {
-		parseURLData("sh600016");
+		for (int i = 0; i < 10; i++) {
+			Map<String, Long> stockMap = new HashMap<>();
+			parseByAmount(parseURLData("sh600016"), stockMap);
+			stockMap.put(i + "", (long) i);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println(stockMap.toString());
+		}
 	}
 
 	protected Map<String, Stock> getStockContentByStockId(String stockId) {
@@ -38,9 +48,8 @@ public class URLAnalyzer {
 		return stockMap;
 	}
 
-	private static Stock parseURLData(String stockId) {
+	private static String parseURLData(String stockId) {
 		String data = "";
-		Stock stock = new Stock();
 		try {
 			URL url = new URL(StockServerFetchFactory.fetchStockURL() + stockId);
 			URLConnection urlConnection = url.openConnection();
@@ -57,15 +66,8 @@ public class URLAnalyzer {
 		} catch (IOException ioe) {
 			//
 		}
-		try {
-			stock = chooseParser(data);
-		} catch (ParseException e) {
-			// should change the formatter here
-			e.printStackTrace();
-		}
 
-		System.out.println(stock.toString());
-		return stock;
+		return data;
 	}
 
 	private static Stock chooseParser(String stockDataStr) throws ParseException {
@@ -73,6 +75,18 @@ public class URLAnalyzer {
 			return parseURLDataForSina(stockDataStr);
 		}
 		return parseURLDataForSina(stockDataStr);
+	}
+
+	private static void parseByAmount(String data, Map<String, Long> stockAmountMap) {
+		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
+		List<String> dataList = Arrays.asList(usefulData.split(","));
+		stockAmountMap.put(dataList.get(31), Long.parseLong(dataList.get(9)));
+	}
+
+	private static void parseByTransaction(String data, Map<String, Long> stockTransactionVolumeMap) {
+		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
+		List<String> dataList = Arrays.asList(usefulData.split(","));
+		stockTransactionVolumeMap.put(dataList.get(31), Long.parseLong(dataList.get(8)));
 	}
 
 	private static Stock parseURLDataForSina(String data) throws ParseException {

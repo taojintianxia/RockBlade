@@ -32,14 +32,14 @@ public class StockServerFetchFactory {
 	public static String fetchStockURL() {
 		String stockURL;
 		Properties configProperties = new Properties();
-		File configFile = new File(StockUtil.StockURL.STOCK_RESOURCES_PROPERTIES_FILE.getContext());
+		File configFile = new File(StockUtil.StockProperties.STOCK_RESOURCES_PROPERTIES_FILE.getContext());
 
 		try {
 			configProperties.load(new FileInputStream(configFile));
-			stockURL = configProperties.getProperty(StockUtil.StockURL.KEY_FRO_STOCK_IN_RESOURCES.getContext());
+			stockURL = configProperties.getProperty(StockUtil.StockProperties.KEY_FRO_STOCK_IN_RESOURCES.getContext());
 		} catch (IOException e) {
 			// should be replaced with slf4j logback
-			stockURL = StockUtil.StockURL.DEFAULT_STOCK_URL.getContext();
+			stockURL = StockUtil.StockProperties.DEFAULT_STOCK_URL.getContext();
 			e.printStackTrace();
 		}
 
