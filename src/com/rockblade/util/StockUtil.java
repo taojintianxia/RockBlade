@@ -1,7 +1,11 @@
 package com.rockblade.util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +63,35 @@ public class StockUtil {
 
 	public static void setZHStockMap(Map<String, String> zHStockMap) {
 		ZHStockMap = zHStockMap;
+	}
+
+	/**
+	 * put the elements of map into an array , then sort by API.
+	 * 
+	 * @param targetMap
+	 * @return
+	 */
+
+	public static <M extends Object, T extends Comparable<T>> Map<M, T> sortMapByValue(Map<M, T> targetMap) {
+		if (targetMap.isEmpty()) {
+			throw new IllegalArgumentException("Map is empty , check it!");
+		}
+
+		List<Map.Entry<M, T>> mapEntryList = new ArrayList<>(targetMap.entrySet());
+		// it's merge even tim sort , better than sort by myself
+		Collections.sort(mapEntryList, new Comparator<Map.Entry<M, T>>() {
+			@Override
+			public int compare(Map.Entry<M, T> map1, Map.Entry<M, T> map2) {
+				return map1.getValue().compareTo(map2.getValue());
+			}
+		});
+
+		targetMap.clear();
+		for (Map.Entry<M, T> entry : mapEntryList) {
+			targetMap.put(entry.getKey(), entry.getValue());
+		}
+
+		return targetMap;
 	}
 
 }
