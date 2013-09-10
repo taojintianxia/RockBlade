@@ -1,10 +1,7 @@
 package com.rockblade.sevlet;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -16,21 +13,10 @@ import java.net.URLConnection;
 
 public class Test {
 
+	final static Logger logger = LoggerFactory.getLogger(Test.class);
+
 	public static void main(String... args) {
-
-		try {
-			URL url = new URL("http://hq.sinajs.cn/list=sh600016");
-			URLConnection cumtConnection = url.openConnection();
-			DataInputStream din = new DataInputStream(cumtConnection.getInputStream());
-			String inputLine;
-			while ((inputLine = din.readLine()) != null) {
-				System.out.println(inputLine);
-			}
-			din.close();
-		} catch (MalformedURLException me) {
-		} catch (IOException ioe) {
-		}
-
+		logger.error(" Temperature set to {}. Old temperature was {}. ");
 	}
 
 }
