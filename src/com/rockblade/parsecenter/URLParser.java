@@ -1,4 +1,4 @@
-package com.rockblade.sevlet;
+package com.rockblade.parsecenter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.rockblade.factory.StockServerFetchFactory;
+import com.rockblade.model.BasicStockInfo;
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
 
@@ -24,31 +25,9 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public class URLAnalyzer {
+public class URLParser {
 
-	public static void main(String... args) {
-
-		for (int i = 0; i < 10; i++) {
-			Map<String, Long> stockMap = new HashMap<>();
-			parseURLData("sh600631", stockMap);
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			System.out.println(stockMap.toString());
-		}
-	}
-
-	protected Map<String, Stock> getStockContentByStockId(String stockId) {
-		Stock stock = new Stock();
-		Map<String, Stock> stockMap = new HashMap<>();
-		stock.setStockId(stockId);
-		stockMap.put(stock.getTime().toString(), stock);
-		return stockMap;
-	}
-
-	public static void parseURLData(String stockId, Map<String, Long> stockAmountMap) {
+	public String retriveURLStrDataByStockId(final String stockId) {
 		String data = "";
 		try {
 			URL url = new URL(StockServerFetchFactory.fetchStockURL() + stockId);
@@ -60,41 +39,18 @@ public class URLAnalyzer {
 				data = inputLine;
 			}
 			bufferReader.close();
-			System.out.println(data);
 		} catch (MalformedURLException me) {
 			//
 		} catch (IOException ioe) {
 			//
 		}
 
-		parseByAmount(data, stockAmountMap);
+		return data;
+
 	}
 
-	private static Stock chooseParser(String stockDataStr) throws ParseException {
-		if (StockServerFetchFactory.fetchStockURL().contains("sina")) {
-			return parseURLDataForSina(stockDataStr);
-		}
-		return parseURLDataForSina(stockDataStr);
-	}
-
-	public static void parseByAmount(String data, Map<String, Long> stockAmountMap) {
-		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
-		List<String> dataList = Arrays.asList(usefulData.split(","));
-		// maybe Suspension
-		if ("".equals(usefulData)) {
-			stockAmountMap.clear();
-		} else {
-			stockAmountMap.put(dataList.get(31), Long.parseLong(dataList.get(9)));
-		}
-	}
-
-	private static void parseByTransaction(String data, Map<String, Long> stockTransactionVolumeMap) {
-		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
-		List<String> dataList = Arrays.asList(usefulData.split(","));
-		stockTransactionVolumeMap.put(dataList.get(31), Long.parseLong(dataList.get(8)));
-	}
-
-	private static Stock parseURLDataForSina(String data) throws ParseException {
+	@SuppressWarnings("unused")
+	public Stock parseURLDataForStockAllInfo(final String data) throws ParseException {
 		Stock stock = new Stock();
 		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
 		List<String> dataList = Arrays.asList(usefulData.split(","));
@@ -133,4 +89,5 @@ public class URLAnalyzer {
 
 		return stock;
 	}
+
 }
