@@ -36,7 +36,7 @@ public class Calculator {
 	}
 
 	public static Map<String, Long> getTopNStockAmount(int n) {
-		ParserInvoker.init();
+		new ParserInvoker();
 
 		Map<String, Long> allStocks = new LinkedHashMap<>();
 		StockUtil.sortMapByValue(allStocks);
@@ -47,5 +47,4 @@ public class Calculator {
 
 		return null;
 	}
-
 }

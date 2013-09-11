@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import com.rockblade.cache.StockCache;
+import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
 
 public class StockIdReader {
@@ -16,8 +18,8 @@ public class StockIdReader {
 	public void readStockIdFromFile() {
 		File SHStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContext() + "/SH.txt");
 		File SZStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContext() + "/SZ.txt");
-		Map<String, String> SHStockMap = StockCache.getSHStockMap();
-		Map<String, String> SZStockMap = StockCache.getZHStockMap();
+		Map<String, Map<Date, Stock>> SHStockMap = StockCache.getSHStockMap();
+		Map<String, Map<Date, Stock>> SZStockMap = StockCache.getSZStockMap();
 		String readLine = "";
 		String[] stockArray = new String[2];
 
@@ -28,13 +30,12 @@ public class StockIdReader {
 
 			while ((readLine = bufferedReaderForSH.readLine()) != null) {
 				stockArray[1] = new String(readLine.substring(readLine.lastIndexOf(" ") + 1));
-				stockArray[0] = new String(readLine.substring(0, readLine.lastIndexOf(" ") - 1));
-				SHStockMap.put(stockArray[1], stockArray[0]);
+				SHStockMap.put(stockArray[1], null);
 			}
 
 			while ((readLine = bufferedReaderForSZ.readLine()) != null) {
 				stockArray = readLine.split(" ");
-				SZStockMap.put(stockArray[0], stockArray[1]);
+				SZStockMap.put(stockArray[1], null);
 			}
 		} catch (FileNotFoundException e) {
 			// since even the initialization file is not exist , read from
@@ -45,7 +46,7 @@ public class StockIdReader {
 		}
 
 		StockCache.setSHStockMap(SHStockMap);
-		StockCache.setZHStockMap(SZStockMap);
+		StockCache.setSZStockMap(SZStockMap);
 	}
 
 }

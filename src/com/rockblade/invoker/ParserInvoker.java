@@ -1,13 +1,22 @@
 package com.rockblade.invoker;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.rockblade.cache.StockCache;
 import com.rockblade.helper.StockIdReader;
+import com.rockblade.model.Stock;
+import com.rockblade.parsecenter.URLParser;
 import com.rockblade.util.StockUtil;
 
 public class ParserInvoker {
 
 	public ParserInvoker() {
-		init();
+		initReadStockIdFromFile();
+		inintALLStockMapCache();
 	}
 
 	/**
@@ -15,18 +24,37 @@ public class ParserInvoker {
 	 * just ignore it
 	 * 
 	 */
-	public static void init() {
-		if (StockCache.getSHStockMap().isEmpty() || StockCache.getZHStockMap().isEmpty()) {
+	private void initReadStockIdFromFile() {
+		if (StockCache.getSHStockMap().isEmpty() || StockCache.getSZStockMap().isEmpty()) {
 			StockIdReader stockIdReader = new StockIdReader();
 			stockIdReader.readStockIdFromFile();
 		}
 	}
-	
-	
 
-	public static void main(String... args) {
-		ParserInvoker invoker = new ParserInvoker();
-		StockUtil.printMap(StockCache.getSHStockMap());
+	private void inintALLStockMapCache() {
+		if (StockCache.getSHStockMap().containsValue(null) || StockCache.getSZStockMap().containsValue(null)) {
+			URLParser urlParser = new URLParser();
+			Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>();
+			Map<String, Map<Date, Stock>> SZStockMap = StockCache.getSZStockMap();
+
+			for (Map.Entry<String, Map<Date, Stock>> entry : SHStockMap.entrySet()) {
+				Map<Date, Stock> tmpMap = new HashMap<>();
+				String stockStrData = urlParser.retriveURLStrDataByStockId("sh" + entry.getKey());
+				Stock stock = new Stock();
+				try {
+					stock = urlParser.parseURLDataForStockAllInfo(stockStrData);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				tmpMap.put(stock.getTime(), stock);
+				SHStockMap.put(stock.getStockId(), tmpMap);
+			}
+
+		}
 	}
 
+	public static void main(String... args) {
+		ParserInvoker pi = new ParserInvoker();
+		StockUtil.printMap(StockCache.getSHStockMap());
+	}
 }

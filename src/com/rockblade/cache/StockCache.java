@@ -1,9 +1,11 @@
 package com.rockblade.cache;
 
-import java.util.HashMap;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.rockblade.model.BasicStockInfo;
+import com.rockblade.model.Stock;
 
 /**
  * 
@@ -15,10 +17,10 @@ import com.rockblade.model.BasicStockInfo;
 
 public class StockCache {
 
-	private static Map<String, Map<String, Long>> allStocksMapPool = new HashMap<>();
-	private static Map<String, BasicStockInfo> basicStockInfoPool = new HashMap<>();
-	private static Map<String, String> SHStockMap = new HashMap<>(1000);
-	private static Map<String, String> ZHStockMap = new HashMap<>(1500);
+	private static Map<String, Map<Date, Stock>> allStocksMapPool = new LinkedHashMap<>();
+	private static Map<String, BasicStockInfo> basicStockInfoPool = new LinkedHashMap<>();
+	private static Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>(1000);
+	private static Map<String, Map<Date, Stock>> SZStockMap = new LinkedHashMap<>(1500);
 
 	public static Map<String, BasicStockInfo> getBasicStockInfoPool() {
 		return basicStockInfoPool;
@@ -28,28 +30,28 @@ public class StockCache {
 		StockCache.basicStockInfoPool = basicStockInfoPool;
 	}
 
-	public static Map<String, Map<String, Long>> getStockMapPool() {
+	public static Map<String, Map<Date, Stock>> getAllStocksMapPool() {
 		return allStocksMapPool;
 	}
 
-	public static void setStockMapPool(Map<String, Map<String, Long>> allStocksMapPool) {
+	public static void setAllStocksMapPool(Map<String, Map<Date, Stock>> allStocksMapPool) {
 		StockCache.allStocksMapPool = allStocksMapPool;
 	}
 
-	public static Map<String, String> getSHStockMap() {
+	public static Map<String, Map<Date, Stock>> getSHStockMap() {
 		return SHStockMap;
 	}
 
-	public static void setSHStockMap(Map<String, String> sHStockMap) {
+	public static void setSHStockMap(Map<String, Map<Date, Stock>> sHStockMap) {
 		SHStockMap = sHStockMap;
 	}
 
-	public static Map<String, String> getZHStockMap() {
-		return ZHStockMap;
+	public static Map<String, Map<Date, Stock>> getSZStockMap() {
+		return SZStockMap;
 	}
 
-	public static void setZHStockMap(Map<String, String> zHStockMap) {
-		ZHStockMap = zHStockMap;
+	public static void setSZStockMap(Map<String, Map<Date, Stock>> sZStockMap) {
+		SZStockMap = sZStockMap;
 	}
 
 }
