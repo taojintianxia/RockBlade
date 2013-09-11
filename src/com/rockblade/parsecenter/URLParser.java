@@ -54,6 +54,10 @@ public class URLParser {
 		Stock stock = new Stock();
 		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
 		List<String> dataList = Arrays.asList(usefulData.split(","));
+		if (dataList.size() < 2) {
+			stock.setSuspension(true);
+			return stock;
+		}
 		stock.setStockName(dataList.get(0));
 		stock.setOpen(Double.parseDouble(dataList.get(1)));
 		stock.setPreClose(Double.parseDouble(dataList.get(2)));
@@ -86,6 +90,7 @@ public class URLParser {
 		stock.setSell5Price(Double.parseDouble(dataList.get(29)));
 		stock.setDate(StockUtil.getDataFormat().parse(dataList.get(30)));
 		stock.setTime(StockUtil.getTimeFormat().parse(dataList.get(31)));
+		stock.setSuspension(false);
 
 		return stock;
 	}

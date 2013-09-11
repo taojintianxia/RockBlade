@@ -78,6 +78,8 @@ public class Stock {
 	private Date date;
 	// 時間
 	private Date time;
+	// 停牌
+	private boolean suspension;
 
 	public String getStockId() {
 		return stockId;
@@ -341,6 +343,14 @@ public class Stock {
 
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	public boolean isSuspension() {
+		return suspension;
+	}
+
+	public void setSuspension(boolean suspension) {
+		this.suspension = suspension;
 	}
 
 	@Override
