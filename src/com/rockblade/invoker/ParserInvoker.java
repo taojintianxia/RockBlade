@@ -39,7 +39,7 @@ public class ParserInvoker {
 			tmpSHStockMap.putAll(SHStockMap);
 			Map<String, Map<Date, Stock>> SZStockMap = StockCache.getSZStockMap();
 			Map<String, Map<Date, Stock>> tmpSZStockMap = new LinkedHashMap<>();
-			tmpSHStockMap.putAll(SZStockMap);
+			tmpSZStockMap.putAll(SZStockMap);
 
 			for (Map.Entry<String, Map<Date, Stock>> entry : tmpSHStockMap.entrySet()) {
 				Map<Date, Stock> tmpMap = new HashMap<>();
@@ -82,5 +82,6 @@ public class ParserInvoker {
 
 	public static void main(String... args) {
 		ParserInvoker pi = new ParserInvoker();
+		StockUtil.printMap(StockCache.getSZStockMap());
 	}
 }

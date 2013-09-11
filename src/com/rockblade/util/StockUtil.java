@@ -84,7 +84,17 @@ public class StockUtil {
 		} else {
 			System.out.println("------------------------");
 			for (Map.Entry<? extends Object, ? extends Object> entry : targetMap.entrySet()) {
-				System.out.println(entry.getKey().toString() + " : " + entry.getValue().toString());
+				try {
+					System.out.println(entry.getKey().toString() + " : " + entry.getValue().toString());
+				} catch (NullPointerException e) {
+					if (entry.getKey().toString() != null) {
+						System.out.println(entry.getKey().toString());
+					} else if (entry.getValue().toString() != null) {
+						System.out.println(entry.getKey().toString());
+					} else {
+						System.out.println("Null Object here ******************************************************");
+					}
+				}
 			}
 			System.out.println("------------------------");
 		}

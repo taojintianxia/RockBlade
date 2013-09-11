@@ -31,9 +31,9 @@ public class Stock {
 	// 競賣價,即"賣一"報價
 	private double sell1;
 	// 成交量,即成交的股票數,使用時應除以100以轉化成手
-	private long transactionVolume;
+	private double transactionVolume;
 	// 成交額,即成交量的總計金額,使用時應除以一萬
-	private long amount;
+	private double amount;
 	// 買一申報股票數
 	private long buy1Volume;
 	// 買一報價
@@ -153,19 +153,19 @@ public class Stock {
 		this.sell1 = sell1;
 	}
 
-	public long getTransactionVolume() {
+	public double getTransactionVolume() {
 		return transactionVolume;
 	}
 
-	public void setTransactionVolume(long transactionVolume) {
+	public void setTransactionVolume(double transactionVolume) {
 		this.transactionVolume = transactionVolume;
 	}
 
-	public long getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(long amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

@@ -34,9 +34,8 @@ public class StockIdReader {
 			}
 
 			while ((readLine = bufferedReaderForSZ.readLine()) != null) {
-				stockArray = readLine.split(" ");
+				stockArray[1] = new String(readLine.substring(readLine.lastIndexOf(" ") + 1));
 				SZStockMap.put(stockArray[1], null);
-				System.out.println(stockArray[1] + " : " + stockArray[0]);
 			}
 		} catch (FileNotFoundException e) {
 			// since even the initialization file is not exist , read from

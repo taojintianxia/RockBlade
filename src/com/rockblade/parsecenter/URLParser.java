@@ -66,8 +66,8 @@ public class URLParser {
 		stock.setLow(Double.parseDouble(dataList.get(5)));
 		stock.setBuy1(Double.parseDouble(dataList.get(6)));
 		stock.setSell1(Double.parseDouble(dataList.get(7)));
-		stock.setTransactionVolume(Long.parseLong(dataList.get(8)));
-		stock.setAmount(Long.parseLong(dataList.get(9)));
+		stock.setTransactionVolume(Double.parseDouble(dataList.get(8)));
+		stock.setAmount(Double.parseDouble(dataList.get(9)));
 		stock.setBuy1Volume(Long.parseLong(dataList.get(10)));
 		stock.setBuy1Price(Double.parseDouble(dataList.get(11)));
 		stock.setBuy2Volume(Long.parseLong(dataList.get(12)));
