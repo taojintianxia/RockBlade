@@ -49,29 +49,12 @@ public class StockUtil {
 		return timeFormat;
 	}
 
-	public static Map<String, String> getSHStockMap() {
-		return SHStockMap;
-	}
-
-	public static void setSHStockMap(Map<String, String> sHStockMap) {
-		SHStockMap = sHStockMap;
-	}
-
-	public static Map<String, String> getZHStockMap() {
-		return ZHStockMap;
-	}
-
-	public static void setZHStockMap(Map<String, String> zHStockMap) {
-		ZHStockMap = zHStockMap;
-	}
-
 	/**
 	 * put the elements of map into an array , then sort by API.
 	 * 
 	 * @param targetMap
 	 * @return
 	 */
-
 
 	public static <M extends Object, A extends Comparable<? super A>> Map<M, A> sortMapByValue(Map<M, A> targetMap) {
 		if (targetMap.isEmpty()) {
@@ -93,5 +76,18 @@ public class StockUtil {
 		}
 
 		return targetMap;
+	}
+
+	public static void printMap(Map<? extends Object, ? extends Object> targetMap) {
+		if (targetMap.isEmpty()) {
+			System.out.println("Map is Empty !");
+		} else {
+			System.out.println("------------------------");
+			for (Map.Entry<? extends Object, ? extends Object> entry : targetMap.entrySet()) {
+				System.out.println(entry.getKey().toString() + " : " + entry.getValue().toString());
+			}
+			System.out.println("------------------------");
+		}
+
 	}
 }

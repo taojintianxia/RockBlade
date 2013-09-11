@@ -1,20 +1,20 @@
-package com.rockblade.sevlet;
+package com.rockblade.parsecenter;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.rockblade.util.StockUtil;
+import com.rockblade.cache.StockCache;
 
 public class MultiThreadInvoker {
 
 	public void execute() {
-		Map<String, String> stockMap = StockUtil.getSHStockMap();
+		Map<String, String> stockMap = StockCache.getSHStockMap();
 		Set<String> keySet = stockMap.keySet();
 		Iterator<String> it = keySet.iterator();
-		Map<String, Map<String, Long>> stockPool = new HashMap<>(StockUtil.getSHStockMap().size());
-		URLAnalyzer urlAnalyzer = new URLAnalyzer();
+		Map<String, Map<String, Long>> stockPool = new HashMap<>(StockCache.getSHStockMap().size());
+		URLParser urlAnalyzer = new URLParser();
 		while (it.hasNext()) {
 			Map<String, Long> specifyStockMap = new HashMap<>();
 			String stockId = it.next();

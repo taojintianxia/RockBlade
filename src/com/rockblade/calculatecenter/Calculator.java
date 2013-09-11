@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.rockblade.sevlet.Executor;
+import com.rockblade.invoker.ParserInvoker;
 import com.rockblade.util.StockUtil;
 
 /**
@@ -32,11 +32,11 @@ public class Calculator {
 	// }
 
 	public static void main(String... args) {
-		getTopNStockAmount(10);
+		getTopNStockAmount(15);
 	}
 
 	public static Map<String, Long> getTopNStockAmount(int n) {
-		Executor.init();
+		ParserInvoker.init();
 
 		Map<String, Long> allStocks = new LinkedHashMap<>();
 		StockUtil.sortMapByValue(allStocks);

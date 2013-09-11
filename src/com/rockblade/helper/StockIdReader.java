@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
+import com.rockblade.cache.StockCache;
 import com.rockblade.util.StockUtil;
 
 public class StockIdReader {
@@ -15,8 +16,8 @@ public class StockIdReader {
 	public void readStockIdFromFile() {
 		File SHStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContext() + "/SH.txt");
 		File SZStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContext() + "/SZ.txt");
-		Map<String, String> SHStockMap = StockUtil.getSHStockMap();
-		Map<String, String> SZStockMap = StockUtil.getZHStockMap();
+		Map<String, String> SHStockMap = StockCache.getSHStockMap();
+		Map<String, String> SZStockMap = StockCache.getZHStockMap();
 		String readLine = "";
 		String[] stockArray = new String[2];
 
@@ -43,8 +44,8 @@ public class StockIdReader {
 			e.printStackTrace();
 		}
 
-		StockUtil.setSHStockMap(SHStockMap);
-		StockUtil.setZHStockMap(SZStockMap);
+		StockCache.setSHStockMap(SHStockMap);
+		StockCache.setZHStockMap(SZStockMap);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.rockblade.sevlet;
+package com.rockblade.parsecenter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public class URLAnalyzer {
+public class URLParser {
 
 	public static void main(String... args) {
 
@@ -72,9 +72,9 @@ public class URLAnalyzer {
 
 	private static Stock chooseParser(String stockDataStr) throws ParseException {
 		if (StockServerFetchFactory.fetchStockURL().contains("sina")) {
-			return parseURLDataForSina(stockDataStr);
+			return parseURLData(stockDataStr);
 		}
-		return parseURLDataForSina(stockDataStr);
+		return parseURLData(stockDataStr);
 	}
 
 	public static void parseByAmount(String data, Map<String, Long> stockAmountMap) {
@@ -94,7 +94,7 @@ public class URLAnalyzer {
 		stockTransactionVolumeMap.put(dataList.get(31), Long.parseLong(dataList.get(8)));
 	}
 
-	private static Stock parseURLDataForSina(String data) throws ParseException {
+	private static Stock parseURLData(String data) throws ParseException {
 		Stock stock = new Stock();
 		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
 		List<String> dataList = Arrays.asList(usefulData.split(","));
