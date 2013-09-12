@@ -1,7 +1,10 @@
 package com.rockblade.cache;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.rockblade.model.BasicStockInfo;
@@ -17,10 +20,15 @@ import com.rockblade.model.Stock;
 
 public class StockCache {
 
-	private static Map<String, Map<Date, Stock>> allStocksMapPool = new LinkedHashMap<>();
-	private static Map<String, BasicStockInfo> basicStockInfoPool = new LinkedHashMap<>();
-	private static Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>(1000);
-	private static Map<String, Map<Date, Stock>> SZStockMap = new LinkedHashMap<>(1500);
+	public final static int SH_STOCK_CACHE_NUM = 1000;
+	public final static int ZH_STOCK_CACHE_NUM = 1500;
+
+	private static Map<String, Map<Date, Stock>> allStocksMapPool = new HashMap<>();
+	private static Map<String, BasicStockInfo> basicStockInfoPool = new HashMap<>();
+	private static List<String> SHStockIdList = new ArrayList<>(SH_STOCK_CACHE_NUM);
+	private static List<String> SZStockIdList = new ArrayList<>(ZH_STOCK_CACHE_NUM);
+	private static Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>();
+	private static Map<String, Map<Date, Stock>> SZStockMap = new LinkedHashMap<>();
 
 	public static Map<String, BasicStockInfo> getBasicStockInfoPool() {
 		return basicStockInfoPool;
@@ -52,6 +60,22 @@ public class StockCache {
 
 	public static void setSZStockMap(Map<String, Map<Date, Stock>> sZStockMap) {
 		SZStockMap = sZStockMap;
+	}
+
+	public static List<String> getSHStockIdList() {
+		return SHStockIdList;
+	}
+
+	public static void setSHStockIdList(List<String> sHStockIdList) {
+		SHStockIdList = sHStockIdList;
+	}
+
+	public static List<String> getSZStockIdList() {
+		return SZStockIdList;
+	}
+
+	public static void setSZStockIdList(List<String> sZStockIdList) {
+		SZStockIdList = sZStockIdList;
 	}
 
 }

@@ -1,10 +1,14 @@
 package com.rockblade.invoker;
 
-import java.text.ParseException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rockblade.cache.StockCache;
 import com.rockblade.helper.StockIdReader;
@@ -13,6 +17,8 @@ import com.rockblade.parsecenter.URLParser;
 import com.rockblade.util.StockUtil;
 
 public class ParserInvoker {
+
+	final static Logger logger = LoggerFactory.getLogger(ParserInvoker.class);
 
 	public ParserInvoker() {
 		initReadStockIdFromFile();
@@ -32,56 +38,34 @@ public class ParserInvoker {
 	}
 
 	private void inintALLStockMapCache() {
-		if (StockCache.getSHStockMap().containsValue(null) || StockCache.getSZStockMap().containsValue(null)) {
+		if (!StockCache.getSHStockIdList().isEmpty()) {
 			URLParser urlParser = new URLParser();
-			Map<String, Map<Date, Stock>> SHStockMap = StockCache.getSHStockMap();
-			Map<String, Map<Date, Stock>> tmpSHStockMap = new LinkedHashMap<>();
-			tmpSHStockMap.putAll(SHStockMap);
-			Map<String, Map<Date, Stock>> SZStockMap = StockCache.getSZStockMap();
-			Map<String, Map<Date, Stock>> tmpSZStockMap = new LinkedHashMap<>();
-			tmpSZStockMap.putAll(SZStockMap);
-
-			for (Map.Entry<String, Map<Date, Stock>> entry : tmpSHStockMap.entrySet()) {
-				Map<Date, Stock> tmpMap = new HashMap<>();
-				String stockStrData = urlParser.retriveURLStrDataByStockId("sh" + entry.getKey());
-				Stock stock = new Stock();
-				try {
-					stock = urlParser.parseURLDataForStockAllInfo(stockStrData);
-					stock.setStockId(entry.getKey());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				if (stock.isSuspension()) {
-					SHStockMap.remove(entry.getKey());
-				} else {
-					tmpMap.put(stock.getTime(), stock);
-					SHStockMap.put(stock.getStockId(), tmpMap);
-				}
+			int stockSize = StockCache.getSHStockIdList().size();
+			List<Stock> stockList = new ArrayList<>(stockSize);
+			Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
+			String[] stockIdArrays = new String[stockSize];
+			try {
+				stockList = urlParser.getStocksByStockIds(StockCache.getSHStockIdList().toArray(stockIdArrays));
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			for (Stock stock : stockList) {
+				Map<Date, Stock> tmpStockMap = new HashMap<>();
+				tmpStockMap.put(stock.getTime(), stock);
+				shStockMap.put(stock.getStockId(), tmpStockMap);
 			}
 
-			for (Map.Entry<String, Map<Date, Stock>> entry : tmpSZStockMap.entrySet()) {
-				Map<Date, Stock> tmpMap = new HashMap<>();
-				String stockStrData = urlParser.retriveURLStrDataByStockId("sz" + entry.getKey());
-				Stock stock = new Stock();
-				try {
-					stock = urlParser.parseURLDataForStockAllInfo(stockStrData);
-					stock.setStockId(entry.getKey());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				if (stock.isSuspension()) {
-					SHStockMap.remove(entry.getKey());
-				} else {
-					tmpMap.put(stock.getTime(), stock);
-					SZStockMap.put(stock.getStockId(), tmpMap);
-				}
-			}
-
+		}else{
+			logger.error("文本文件中的ID沒有讀取出來!");
 		}
 	}
 
 	public static void main(String... args) {
+		long start = System.currentTimeMillis();
 		ParserInvoker pi = new ParserInvoker();
-		StockUtil.printMap(StockCache.getSZStockMap());
+		StockUtil.printMap(StockCache.getSHStockMap());
+		System.out.println(((System.currentTimeMillis() - start) / 1000) + " seconds");
 	}
 }

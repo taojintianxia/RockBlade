@@ -1,5 +1,6 @@
 package com.rockblade.model;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -35,43 +36,43 @@ public class Stock {
 	// 成交額,即成交量的總計金額,使用時應除以一萬
 	private double amount;
 	// 買一申報股票數
-	private long buy1Volume;
+	private double buy1Volume;
 	// 買一報價
 	private double buy1Price;
 	// 買二申報股票數
-	private long buy2Volume;
+	private double buy2Volume;
 	// 買二報價
 	private double buy2Price;
 	// 買三申報股票數
-	private long buy3Volume;
+	private double buy3Volume;
 	// 買三報價
 	private double buy3Price;
 	// 買四申報股票數
-	private long buy4Volume;
+	private double buy4Volume;
 	// 買四報價
 	private double buy4Price;
 	// 買五申報股票數
-	private long buy5Volume;
+	private double buy5Volume;
 	// 買五報價
 	private double buy5Price;
 	// 賣一申報股票數
-	private long sell1Volume;
+	private double sell1Volume;
 	// 賣一報價
 	private double sell1Price;
 	// 賣二申報股票數
-	private long sell2Volume;
+	private double sell2Volume;
 	// 賣二報價
 	private double sell2Price;
 	// 賣三申報股票數
-	private long sell3Volume;
+	private double sell3Volume;
 	// 賣三報價
 	private double sell3Price;
 	// 賣四申報股票數
-	private long sell4Volume;
+	private double sell4Volume;
 	// 賣四報價
 	private double sell4Price;
 	// 賣五申報股票數
-	private long sell5Volume;
+	private double sell5Volume;
 	// 賣五報價
 	private double sell5Price;
 	// 日期
@@ -169,11 +170,11 @@ public class Stock {
 		this.amount = amount;
 	}
 
-	public long getBuy1Volume() {
+	public double getBuy1Volume() {
 		return buy1Volume;
 	}
 
-	public void setBuy1Volume(long buy1Volume) {
+	public void setBuy1Volume(double buy1Volume) {
 		this.buy1Volume = buy1Volume;
 	}
 
@@ -185,11 +186,11 @@ public class Stock {
 		this.buy1Price = buy1Price;
 	}
 
-	public long getBuy2Volume() {
+	public double getBuy2Volume() {
 		return buy2Volume;
 	}
 
-	public void setBuy2Volume(long buy2Volume) {
+	public void setBuy2Volume(double buy2Volume) {
 		this.buy2Volume = buy2Volume;
 	}
 
@@ -201,11 +202,11 @@ public class Stock {
 		this.buy2Price = buy2Price;
 	}
 
-	public long getBuy3Volume() {
+	public double getBuy3Volume() {
 		return buy3Volume;
 	}
 
-	public void setBuy3Volume(long buy3Volume) {
+	public void setBuy3Volume(double buy3Volume) {
 		this.buy3Volume = buy3Volume;
 	}
 
@@ -217,11 +218,11 @@ public class Stock {
 		this.buy3Price = buy3Price;
 	}
 
-	public long getBuy4Volume() {
+	public double getBuy4Volume() {
 		return buy4Volume;
 	}
 
-	public void setBuy4Volume(long buy4Volume) {
+	public void setBuy4Volume(double buy4Volume) {
 		this.buy4Volume = buy4Volume;
 	}
 
@@ -233,11 +234,11 @@ public class Stock {
 		this.buy4Price = buy4Price;
 	}
 
-	public long getBuy5Volume() {
+	public double getBuy5Volume() {
 		return buy5Volume;
 	}
 
-	public void setBuy5Volume(long buy5Volume) {
+	public void setBuy5Volume(double buy5Volume) {
 		this.buy5Volume = buy5Volume;
 	}
 
@@ -249,11 +250,11 @@ public class Stock {
 		this.buy5Price = buy5Price;
 	}
 
-	public long getSell1Volume() {
+	public double getSell1Volume() {
 		return sell1Volume;
 	}
 
-	public void setSell1Volume(long sell1Volume) {
+	public void setSell1Volume(double sell1Volume) {
 		this.sell1Volume = sell1Volume;
 	}
 
@@ -265,11 +266,11 @@ public class Stock {
 		this.sell1Price = sell1Price;
 	}
 
-	public long getSell2Volume() {
+	public double getSell2Volume() {
 		return sell2Volume;
 	}
 
-	public void setSell2Volume(long sell2Volume) {
+	public void setSell2Volume(double sell2Volume) {
 		this.sell2Volume = sell2Volume;
 	}
 
@@ -281,11 +282,11 @@ public class Stock {
 		this.sell2Price = sell2Price;
 	}
 
-	public long getSell3Volume() {
+	public double getSell3Volume() {
 		return sell3Volume;
 	}
 
-	public void setSell3Volume(long sell3Volume) {
+	public void setSell3Volume(double sell3Volume) {
 		this.sell3Volume = sell3Volume;
 	}
 
@@ -297,11 +298,11 @@ public class Stock {
 		this.sell3Price = sell3Price;
 	}
 
-	public long getSell4Volume() {
+	public double getSell4Volume() {
 		return sell4Volume;
 	}
 
-	public void setSell4Volume(long sell4Volume) {
+	public void setSell4Volume(double sell4Volume) {
 		this.sell4Volume = sell4Volume;
 	}
 
@@ -313,11 +314,11 @@ public class Stock {
 		this.sell4Price = sell4Price;
 	}
 
-	public long getSell5Volume() {
+	public double getSell5Volume() {
 		return sell5Volume;
 	}
 
-	public void setSell5Volume(long sell5Volume) {
+	public void setSell5Volume(double sell5Volume) {
 		this.sell5Volume = sell5Volume;
 	}
 
@@ -355,8 +356,9 @@ public class Stock {
 
 	@Override
 	public String toString() {
-		return "Stock Name : " + getStockName() + " , Current Price : " + getCurrentPrice() + " , Transaction Volume : " + getTransactionVolume() / 100
-				+ " Hand , Amount : " + getAmount() / 10000 + " W \n";
+		DecimalFormat decimalFormat = new DecimalFormat(".##");
+		return "Stock Name : " + getStockName() + " , Current Price : " + getCurrentPrice() + " , Transaction Volume : " + decimalFormat.format(getTransactionVolume() / 100)
+				+ "手 , Amount : " + decimalFormat.format(getAmount() / 10000) + "萬 \n";
 	}
 
 }
