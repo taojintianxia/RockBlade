@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="libs/guava-15.0.jar"/>
 	<classpathentry kind="lib" path="libs/httpasyncclient-4.0-beta4.jar"/>
 	<classpathentry kind="lib" path="libs/httpasyncclient-cache-4.0-beta4.jar"/>
-	<classpathentry kind="lib" path="libs/httpclient-4.3-beta1.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-4.3-beta1.jar" sourcepath="libs/sources/httpcomponents-client-4.3-beta2-src.zip"/>
 	<classpathentry kind="lib" path="libs/httpclient-cache-4.3-beta1.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-4.3-beta2.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-nio-4.3-beta2.jar"/>

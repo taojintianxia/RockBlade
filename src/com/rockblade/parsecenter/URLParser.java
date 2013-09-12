@@ -79,8 +79,13 @@ public class URLParser {
 					public void completed(final HttpResponse response) {
 						latch.countDown();
 						try {
-							stockList.add(parseURLDataForStockAllInfo(EntityUtils.toString(response.getEntity())));
-						} catch (IOException | org.apache.http.ParseException | ParseException e) {
+							String stockData = EntityUtils.toString(response.getEntity());
+							System.out.println(stockData);
+//							Stock stock = parseURLDataForStockAllInfo(stockData);
+//							if (!stock.isSuspension()) {
+//								stockList.add(parseURLDataForStockAllInfo(EntityUtils.toString(response.getEntity())));
+//							}
+						} catch (IOException | org.apache.http.ParseException  e) {
 							logger.error(e.getLocalizedMessage());
 						}
 					}
