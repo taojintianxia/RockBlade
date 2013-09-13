@@ -1,12 +1,11 @@
 package com.rockblade.calculatecenter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.rockblade.invoker.ParserInvoker;
+import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
 
 /**
@@ -25,17 +24,11 @@ import com.rockblade.util.StockUtil;
  */
 public class Calculator {
 
-	// public Map<String, Long> getTopMaximumAmountStock(int n) {
-	// Map<String, Map<String, Long>> cacheMap = StockCache.getStockMapPool();
-	// Map<Integer, Map<String, Long>> topNMap = new HashMap<>();
-	//
-	// }
-
 	public static void main(String... args) {
-		getTopNStockAmount(15);
+
 	}
 
-	public static Map<String, Long> getTopNStockAmount(int n) {
+	public static List<Stock> getTopNStockAmount(int n) {
 		new ParserInvoker();
 
 		Map<String, Long> allStocks = new LinkedHashMap<>();

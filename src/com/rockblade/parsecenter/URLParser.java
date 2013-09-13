@@ -57,15 +57,14 @@ public class URLParser {
 		}
 
 		return data;
-
 	}
 
-	public List<Stock> getStocksByStockIds(final String[] targetStocks) throws IOException, InterruptedException {
-
+	private List<String> getStocksIds(final String[] targetStocks) throws IOException, InterruptedException {
 		final int stocksSize = targetStocks.length;
 		final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
 		final CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().setDefaultRequestConfig(requestConfig).build();
-		final List<Stock> stockList = new ArrayList<>(stocksSize);
+		final List<String> stockStrList = new ArrayList<>(stocksSize);
+
 		httpclient.start();
 		try {
 			HttpGet[] requests = new HttpGet[stocksSize];
@@ -81,11 +80,8 @@ public class URLParser {
 						try {
 							String stockData = EntityUtils.toString(response.getEntity());
 							System.out.println(stockData);
-//							Stock stock = parseURLDataForStockAllInfo(stockData);
-//							if (!stock.isSuspension()) {
-//								stockList.add(parseURLDataForStockAllInfo(EntityUtils.toString(response.getEntity())));
-//							}
-						} catch (IOException | org.apache.http.ParseException  e) {
+							stockStrList.add(stockData);
+						} catch (IOException | org.apache.http.ParseException e) {
 							logger.error(e.getLocalizedMessage());
 						}
 					}
@@ -107,10 +103,25 @@ public class URLParser {
 			httpclient.close();
 		}
 
+		return stockStrList;
+	}
+
+	public List<Stock> getStocksByStockIds(final String[] targetStocks) throws IOException, InterruptedException, ParseException {
+		List<String> stockStrList = getStocksIds(targetStocks);
+		int stockSize = stockStrList.size();
+		List<Stock> stockList = new ArrayList<>(stockSize);
+		for (String stockStrData : stockStrList) {
+			Stock stock = parseURLDataForStockAllInfo(stockStrData);
+			if (!stock.isSuspension()) {
+				stockList.add(stock);
+			}
+		}
+
 		return stockList;
 	}
 
 	public Stock parseURLDataForStockAllInfo(String data) throws ParseException {
+		System.out.println(data);
 		Stock stock = new Stock();
 		String stockId = new String(data.substring(13, data.indexOf("=")));
 		stock.setStockId(stockId);
