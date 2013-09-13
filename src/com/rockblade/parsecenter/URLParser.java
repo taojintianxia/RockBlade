@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.http.HttpResponse;
@@ -57,15 +58,19 @@ public class URLParser {
 		}
 
 		return data;
-
 	}
 
-	public List<Stock> getStocksByStockIds(final String[] targetStocks) throws IOException, InterruptedException {
+	private void testPrint(String str) {
+		System.out.println(str);
+	}
+
+	private List<String> getStocksIds(final String[] targetStocks) throws IOException, InterruptedException {
 
 		final int stocksSize = targetStocks.length;
 		final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
 		final CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().setDefaultRequestConfig(requestConfig).build();
-		final List<Stock> stockList = new ArrayList<>(stocksSize);
+		final List<String> stockStrList = new ArrayList<>(stocksSize);
+		final List<Stock> stockList = new CopyOnWriteArrayList<>();
 		httpclient.start();
 		try {
 			HttpGet[] requests = new HttpGet[stocksSize];
@@ -81,11 +86,8 @@ public class URLParser {
 						try {
 							String stockData = EntityUtils.toString(response.getEntity());
 							System.out.println(stockData);
-//							Stock stock = parseURLDataForStockAllInfo(stockData);
-//							if (!stock.isSuspension()) {
-//								stockList.add(parseURLDataForStockAllInfo(EntityUtils.toString(response.getEntity())));
-//							}
-						} catch (IOException | org.apache.http.ParseException  e) {
+							stockStrList.add(stockData);
+						} catch (IOException | org.apache.http.ParseException e) {
 							logger.error(e.getLocalizedMessage());
 						}
 					}
@@ -107,10 +109,79 @@ public class URLParser {
 			httpclient.close();
 		}
 
+		return stockStrList;
+	}
+
+	public void testtest(String data, List<Stock> stockList) {
+		System.out.println(data);
+		Stock stock = new Stock();
+		String stockId = new String(data.substring(13, data.indexOf("=")));
+		stock.setStockId(stockId);
+		String usefulData = new String(data.substring(data.indexOf("\"") + 1, data.lastIndexOf("\"")));
+		List<String> dataList = Arrays.asList(usefulData.split(","));
+		if (dataList.size() < 3) {
+			stock.setSuspension(true);
+		} else {
+			stock.setStockName(dataList.get(0));
+			stock.setOpen(Double.parseDouble(dataList.get(1)));
+			stock.setPreClose(Double.parseDouble(dataList.get(2)));
+			stock.setCurrentPrice(Double.parseDouble(dataList.get(3)));
+			stock.setHigh(Double.parseDouble(dataList.get(4)));
+			stock.setLow(Double.parseDouble(dataList.get(5)));
+			stock.setBuy1(Double.parseDouble(dataList.get(6)));
+			stock.setSell1(Double.parseDouble(dataList.get(7)));
+			stock.setTransactionVolume(Double.parseDouble(dataList.get(8)));
+			stock.setAmount(Double.parseDouble(dataList.get(9)));
+			stock.setBuy1Volume(Double.parseDouble(dataList.get(10)));
+			stock.setBuy1Price(Double.parseDouble(dataList.get(11)));
+			stock.setBuy2Volume(Double.parseDouble(dataList.get(12)));
+			stock.setBuy2Price(Double.parseDouble(dataList.get(13)));
+			stock.setBuy3Volume(Double.parseDouble(dataList.get(14)));
+			stock.setBuy3Price(Double.parseDouble(dataList.get(15)));
+			stock.setBuy4Volume(Double.parseDouble(dataList.get(16)));
+			stock.setBuy4Price(Double.parseDouble(dataList.get(17)));
+			stock.setBuy5Volume(Double.parseDouble(dataList.get(18)));
+			stock.setBuy5Price(Double.parseDouble(dataList.get(19)));
+			stock.setSell1Volume(Double.parseDouble(dataList.get(20)));
+			stock.setSell1Price(Double.parseDouble(dataList.get(21)));
+			stock.setSell2Volume(Double.parseDouble(dataList.get(22)));
+			stock.setSell2Price(Double.parseDouble(dataList.get(23)));
+			stock.setSell3Volume(Double.parseDouble(dataList.get(24)));
+			stock.setSell3Price(Double.parseDouble(dataList.get(25)));
+			stock.setSell4Volume(Double.parseDouble(dataList.get(26)));
+			stock.setSell4Price(Double.parseDouble(dataList.get(27)));
+			stock.setSell5Volume(Double.parseDouble(dataList.get(28)));
+			stock.setSell5Price(Double.parseDouble(dataList.get(29)));
+			try {
+				stock.setDate(StockUtil.getDataFormat().parse(dataList.get(30)));
+				stock.setTime(StockUtil.getTimeFormat().parse(dataList.get(31)));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			stock.setSuspension(false);
+		}
+
+		stockList.add(stock);
+
+	}
+
+	public List<Stock> getStocksByStockIds(final String[] targetStocks) throws IOException, InterruptedException, ParseException {
+		List<String> stockStrList = getStocksIds(targetStocks);
+		int stockSize = stockStrList.size();
+		List<Stock> stockList = new ArrayList<>(stockStrList.size());
+		for (String stockStrData : stockStrList) {
+			Stock stock = parseURLDataForStockAllInfo(stockStrData);
+			if (!stock.isSuspension()) {
+				stockList.add(stock);
+			}
+		}
+
 		return stockList;
 	}
 
 	public Stock parseURLDataForStockAllInfo(String data) throws ParseException {
+		System.out.println(data);
 		Stock stock = new Stock();
 		String stockId = new String(data.substring(13, data.indexOf("=")));
 		stock.setStockId(stockId);

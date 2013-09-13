@@ -1,6 +1,7 @@
 package com.rockblade.invoker;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,20 +45,20 @@ public class ParserInvoker {
 			List<Stock> stockList = new ArrayList<>(stockSize);
 			Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
 			String[] stockIdArrays = new String[stockSize];
+
 			try {
 				stockList = urlParser.getStocksByStockIds(StockCache.getSHStockIdList().toArray(stockIdArrays));
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
+			} catch (IOException | InterruptedException | ParseException e) {
 				e.printStackTrace();
 			}
+
 			for (Stock stock : stockList) {
 				Map<Date, Stock> tmpStockMap = new HashMap<>();
 				tmpStockMap.put(stock.getTime(), stock);
 				shStockMap.put(stock.getStockId(), tmpStockMap);
 			}
 
-		}else{
+		} else {
 			logger.error("文本文件中的ID沒有讀取出來!");
 		}
 	}
