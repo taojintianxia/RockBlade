@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +19,6 @@ public class StockUtil {
 
 	private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-	// StockId , StockName
-	private static Map<String, String> SHStockMap = new HashMap<>(1000);
-	private static Map<String, String> ZHStockMap = new HashMap<>(1500);
 
 	public static enum StockProperties {
 

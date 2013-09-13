@@ -62,7 +62,7 @@ public class ParserInvoker {
 			logger.error("文本文件中的ID沒有讀取出來!");
 		}
 	}
-
+	
 	public static void main(String... args) {
 		long start = System.currentTimeMillis();
 		ParserInvoker pi = new ParserInvoker();
