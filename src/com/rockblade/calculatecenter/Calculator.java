@@ -1,6 +1,7 @@
 package com.rockblade.calculatecenter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Calculator {
 
 	}
 
-	public static List<Stock> getTopNSHStockAmount(int n) {
+	public static List<Stock> getTopNAmountInSHStock(int n) {
 		ParserInvoker parserInvoker = new ParserInvoker();
 		Map<String, Stock> currentSHStockMap = StockCache.getCurrentSHStockMap();
 		Map<String, Double> currentSHStockAmountMap = new LinkedHashMap<>(currentSHStockMap.size());
@@ -42,5 +43,24 @@ public class Calculator {
 		}
 
 		return topNSHStockAmountList;
+	}
+
+	public static List<Stock> getTopNMoneyInjectionInSHStock(int n) {
+		List<Stock> topNMoneyInjectionStockList = new ArrayList<>(n);
+		Map<String, Map<Date, Stock>> allSHStockMap = StockCache.getSHStockMap();
+		Map<String, Double> allSHStockAmountDiffMap = new LinkedHashMap<>(allSHStockMap.size());
+
+		return topNMoneyInjectionStockList;
+	}
+
+	private Double getAmountDiffer(Map<Date, Stock> stockHistoryMap) {
+		int start = 0;
+		int end = 0;
+		int size = stockHistoryMap.size();
+		double tmpSum = 0;
+		double maxmiumDiffer = 0;
+		List<Double> differList = new ArrayList<>(size);
+
+		return maxmiumDiffer;
 	}
 }
