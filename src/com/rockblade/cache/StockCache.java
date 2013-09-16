@@ -25,6 +25,7 @@ public class StockCache {
 
 	private static Map<String, Map<Date, Stock>> allStocksMapPool = new HashMap<>();
 	private static Map<String, BasicStockInfo> basicStockInfoPool = new HashMap<>();
+	private static Map<String, Stock> currentSHStockMap = new LinkedHashMap<>();
 	private static List<String> SHStockIdList = new ArrayList<>(SH_STOCK_CACHE_NUM);
 	private static List<String> SZStockIdList = new ArrayList<>(ZH_STOCK_CACHE_NUM);
 	private static Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>();
@@ -76,6 +77,14 @@ public class StockCache {
 
 	public static void setSZStockIdList(List<String> sZStockIdList) {
 		SZStockIdList = sZStockIdList;
+	}
+
+	public static Map<String, Stock> getCurrentSHStockMap() {
+		return currentSHStockMap;
+	}
+
+	public static void setCurrentSHStockMap(Map<String, Stock> currentSHStockMap) {
+		StockCache.currentSHStockMap = currentSHStockMap;
 	}
 
 }
