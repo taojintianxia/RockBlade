@@ -19,8 +19,8 @@ public class StockIdReader {
 
 	@SuppressWarnings("resource")
 	public void readStockIdFromFile() {
-		File SHStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContext() + "/SH.txt");
-		File SZStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContext() + "/SZ.txt");
+		File SHStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContent() + "/SH.txt");
+		File SZStockFile = new File(StockUtil.StockProperties.STOCK_ID_FILE.getContent() + "/SZ.txt");
 		String readLine = "";
 		String[] stockArray = new String[2];
 

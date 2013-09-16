@@ -38,6 +38,8 @@ public class URLParser {
 
 	final static Logger logger = LoggerFactory.getLogger(URLParser.class);
 
+	private List<String> stockStrDataList ;
+
 	public String retriveURLStrDataByStockId(final String stockId) {
 		String data = "";
 		try {
@@ -63,13 +65,13 @@ public class URLParser {
 		final int stocksSize = targetStocks.length;
 		final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
 		final CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().setDefaultRequestConfig(requestConfig).build();
-		final List<String> stockStrList = new ArrayList<>(stocksSize);
+		stockStrDataList = new ArrayList<>(stocksSize);
 
 		httpclient.start();
 		try {
 			HttpGet[] requests = new HttpGet[stocksSize];
 			for (int i = 0; i < stocksSize; i++) {
-				requests[i] = new HttpGet(StockUtil.StockProperties.DEFAULT_STOCK_URL.getContext() + targetStocks[i]);
+				requests[i] = new HttpGet(StockUtil.StockProperties.DEFAULT_STOCK_URL.getContent() + targetStocks[i]);
 			}
 			final CountDownLatch latch = new CountDownLatch(requests.length);
 			for (final HttpGet request : requests) {
@@ -79,8 +81,7 @@ public class URLParser {
 						latch.countDown();
 						try {
 							String stockData = EntityUtils.toString(response.getEntity());
-							System.out.println(stockData);
-							stockStrList.add(stockData);
+							stockStrDataList.add(stockData);
 						} catch (IOException | org.apache.http.ParseException e) {
 							logger.error(e.getLocalizedMessage());
 						}
@@ -103,7 +104,7 @@ public class URLParser {
 			httpclient.close();
 		}
 
-		return stockStrList;
+		return stockStrDataList;
 	}
 
 	public List<Stock> getStocksByStockIds(final String[] targetStocks) throws IOException, InterruptedException, ParseException {
@@ -121,7 +122,6 @@ public class URLParser {
 	}
 
 	public Stock parseURLDataForStockAllInfo(String data) throws ParseException {
-		System.out.println(data);
 		Stock stock = new Stock();
 		String stockId = new String(data.substring(13, data.indexOf("=")));
 		stock.setStockId(stockId);

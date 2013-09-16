@@ -22,8 +22,12 @@ public class ParserInvoker {
 	final static Logger logger = LoggerFactory.getLogger(ParserInvoker.class);
 
 	public ParserInvoker() {
-		initReadStockIdFromFile();
-		inintALLStockMapCache();
+		try {
+			initReadStockIdFromFile();
+			inintALLStockMapCache();
+		} catch (IOException e) {
+			logger.error(StockUtil.Messages.STOCKID_NOT_READ_FROM_TXT_FILE.getContent());
+		}
 	}
 
 	/**
@@ -32,14 +36,25 @@ public class ParserInvoker {
 	 * 
 	 */
 	private void initReadStockIdFromFile() {
-		if (StockCache.getSHStockMap().isEmpty() || StockCache.getSZStockMap().isEmpty()) {
+		if (StockCache.getSHStockMap().isEmpty()) {
 			StockIdReader stockIdReader = new StockIdReader();
 			stockIdReader.readStockIdFromFile();
 		}
 	}
 
-	private void inintALLStockMapCache() {
-		if (!StockCache.getSHStockIdList().isEmpty()) {
+	/**
+	 * when first time invoke Parser , will retrieve stock data from online and
+	 * set to StockCache
+	 * 
+	 * @throws IOException
+	 */
+	private void inintALLStockMapCache() throws IOException {
+		if (StockCache.getSHStockIdList().isEmpty()) {
+			logger.error(StockUtil.Messages.STOCKID_NOT_READ_FROM_TXT_FILE.getContent());
+			throw new IOException(StockUtil.Messages.STOCKID_NOT_READ_FROM_TXT_FILE.getContent());
+		}
+
+		if (StockCache.getSHStockMap().isEmpty()) {
 			URLParser urlParser = new URLParser();
 			int stockSize = StockCache.getSHStockIdList().size();
 			List<Stock> stockList = new ArrayList<>(stockSize);
@@ -53,20 +68,37 @@ public class ParserInvoker {
 			}
 
 			for (Stock stock : stockList) {
+				// here is new HashMap , cause first time , there is not score
+				// in cache
 				Map<Date, Stock> tmpStockMap = new HashMap<>();
 				tmpStockMap.put(stock.getTime(), stock);
 				shStockMap.put(stock.getStockId(), tmpStockMap);
 			}
 
-		} else {
-			logger.error("文本文件中的ID沒有讀取出來!");
 		}
 	}
-	
-	public static void main(String... args) {
-		long start = System.currentTimeMillis();
-		ParserInvoker pi = new ParserInvoker();
-		StockUtil.printMap(StockCache.getSHStockMap());
-		System.out.println(((System.currentTimeMillis() - start) / 1000) + " seconds");
+
+	/**
+	 * update stock from online
+	 */
+	public void updateStocks() {
+		URLParser urlParser = new URLParser();
+		int stockSize = StockCache.getSHStockIdList().size();
+		List<Stock> stockList = new ArrayList<>(stockSize);
+		Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
+		String[] stockIdArrays = new String[stockSize];
+
+		try {
+			stockList = urlParser.getStocksByStockIds(StockCache.getSHStockIdList().toArray(stockIdArrays));
+		} catch (IOException | InterruptedException | ParseException e) {
+			e.printStackTrace();
+		}
+
+		for (Stock stock : stockList) {
+			// since there already some records in cache , need to get it out.
+			Map<Date, Stock> tmpStockMap = shStockMap.get(stock.getStockId());
+			tmpStockMap.put(new Date(), stock);
+			shStockMap.put(stock.getStockId(), tmpStockMap);
+		}
 	}
 }

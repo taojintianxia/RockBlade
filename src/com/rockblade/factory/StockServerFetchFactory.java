@@ -2,7 +2,6 @@ package com.rockblade.factory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -32,14 +31,14 @@ public class StockServerFetchFactory {
 	public static String fetchStockURL() {
 		String stockURL;
 		Properties configProperties = new Properties();
-		File configFile = new File(StockUtil.StockProperties.STOCK_RESOURCES_PROPERTIES_FILE.getContext());
+		File configFile = new File(StockUtil.StockProperties.STOCK_RESOURCES_PROPERTIES_FILE.getContent());
 
 		try {
 			configProperties.load(new FileInputStream(configFile));
-			stockURL = configProperties.getProperty(StockUtil.StockProperties.KEY_FRO_STOCK_IN_RESOURCES.getContext());
+			stockURL = configProperties.getProperty(StockUtil.StockProperties.KEY_FRO_STOCK_IN_RESOURCES.getContent());
 		} catch (IOException e) {
 			// should be replaced with slf4j logback
-			stockURL = StockUtil.StockProperties.DEFAULT_STOCK_URL.getContext();
+			stockURL = StockUtil.StockProperties.DEFAULT_STOCK_URL.getContent();
 			e.printStackTrace();
 		}
 

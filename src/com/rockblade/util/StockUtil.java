@@ -25,16 +25,30 @@ public class StockUtil {
 		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="), STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"), KEY_FRO_STOCK_IN_RESOURCES(
 				"stock_url"), SINA_SITE("hq.sinajs.cn"), GOOGLE_SITE(""), STOCK_ID_FILE("resources/StockId");
 
-		private String context;
+		private String content;
 
-		private StockProperties(String context) {
-			this.context = context;
+		private StockProperties(String content) {
+			this.content = content;
 		}
 
-		public String getContext() {
-			return context;
+		public String getContent() {
+			return content;
 		}
 
+	}
+
+	public static enum Messages {
+		STOCKID_NOT_READ_FROM_TXT_FILE("股票信息沒有從文本文件中讀取出來.");
+
+		private String content;
+
+		private Messages(String content) {
+			this.content = content;
+		}
+
+		public String getContent() {
+			return content;
+		}
 	}
 
 	public static SimpleDateFormat getDataFormat() {
