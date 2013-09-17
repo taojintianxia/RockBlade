@@ -45,22 +45,78 @@ public class Calculator {
 		return topNSHStockAmountList;
 	}
 
-	public static List<Stock> getTopNMoneyInjectionInSHStock(int n) {
-		List<Stock> topNMoneyInjectionStockList = new ArrayList<>(n);
+	/**
+	 * get top n amount difference stock
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public static void calculateTopNAmountDifferenceInSHStock(int n) {
 		Map<String, Map<Date, Stock>> allSHStockMap = StockCache.getSHStockMap();
-		Map<String, Double> allSHStockAmountDiffMap = new LinkedHashMap<>(allSHStockMap.size());
+		Map<String, Double> allSHAmountDifStockMap = new LinkedHashMap<>(allSHStockMap.size());
+		Map<String, Double> shTopNAmountDifStockMap = new LinkedHashMap<>(n);
+		double amountDif = 0;
+		int counter = 0;
+		for (Map.Entry<String, Map<Date, Stock>> entry : allSHStockMap.entrySet()) {
+			amountDif = getMaximumAmountDiffer(entry.getValue());
+			allSHAmountDifStockMap.put(entry.getKey(), amountDif);
+		}
 
-		return topNMoneyInjectionStockList;
+		StockUtil.sortMapByValueInDesc(allSHAmountDifStockMap);
+		for (Map.Entry<String, Double> entry : allSHAmountDifStockMap.entrySet()) {
+			if (counter == n) {
+				break;
+			}
+			shTopNAmountDifStockMap.put(entry.getKey(), entry.getValue());
+			counter++;
+		}
+
+		StockCache.setSHStockTopAmountDifferenceMap(shTopNAmountDifStockMap);
 	}
 
-	private Double getAmountDiffer(Map<Date, Stock> stockHistoryMap) {
+	/**
+	 * get the maximum amount difference for a specific stock
+	 * 
+	 * @param stockHistoryMap
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private static Double getMaximumAmountDiffer(Map<Date, Stock> stockHistoryMap) {
+		double elementValue = 0;
+		int counter = 0;
+
 		int start = 0;
 		int end = 0;
 		int size = stockHistoryMap.size();
 		double tmpSum = 0;
-		double maxmiumDiffer = 0;
+		double maxDiffer = 0;
 		List<Double> differList = new ArrayList<>(size);
 
-		return maxmiumDiffer;
+		for (Map.Entry<Date, Stock> entry : stockHistoryMap.entrySet()) {
+			if (counter++ == 0) {
+				elementValue = entry.getValue().getAmount();
+				continue;
+			}
+
+			differList.add(elementValue - entry.getValue().getAmount());
+			elementValue = entry.getValue().getAmount();
+		}
+
+		// get maximum sub array , this is the core algorithm of this method
+		for (int i = 0; i < size - 1; i++) {
+			tmpSum += differList.get(i);
+			if (tmpSum > 0) {
+				tmpSum = 0;
+			} else if (tmpSum == differList.get(i)) {
+				start = i;
+			}
+
+			if (maxDiffer > tmpSum) {
+				maxDiffer = tmpSum;
+				end = i;
+			}
+		}
+
+		return maxDiffer;
 	}
 }
