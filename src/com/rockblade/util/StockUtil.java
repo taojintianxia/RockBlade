@@ -88,6 +88,28 @@ public class StockUtil {
 		return targetMap;
 	}
 
+	public static <M extends Object, A extends Comparable<? super A>> Map<M, A> sortMapByValueInDesc(Map<M, A> targetMap) {
+		if (targetMap.isEmpty()) {
+			throw new IllegalArgumentException("Map is empty , check it!");
+		}
+
+		List<Map.Entry<M, A>> mapEntryList = new ArrayList<>(targetMap.entrySet());
+		// it's merge even tim sort , better than sort by myself
+		Collections.sort(mapEntryList, new Comparator<Map.Entry<M, A>>() {
+			@Override
+			public int compare(Map.Entry<M, A> map1, Map.Entry<M, A> map2) {
+				return -(map1.getValue().compareTo(map2.getValue()));
+			}
+		});
+
+		targetMap.clear();
+		for (Map.Entry<M, A> entry : mapEntryList) {
+			targetMap.put(entry.getKey(), entry.getValue());
+		}
+
+		return targetMap;
+	}
+
 	public static void printMap(Map<? extends Object, ? extends Object> targetMap) {
 		if (targetMap.isEmpty()) {
 			System.out.println("Map is Empty !");
@@ -108,6 +130,5 @@ public class StockUtil {
 			}
 			System.out.println("------------------------");
 		}
-
 	}
 }
