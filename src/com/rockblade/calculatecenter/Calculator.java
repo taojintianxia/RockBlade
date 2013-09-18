@@ -24,10 +24,9 @@ public class Calculator {
 
 	public static void main(String... args) {
 		List<Stock> targetStockList = getTopNAmountInSHStock(10);
-		for(Stock stock : targetStockList){
+		for (Stock stock : targetStockList) {
 			System.out.println(stock.toString());
 		}
-		
 	}
 
 	public static List<Stock> getTopNAmountInSHStock(int n) {
