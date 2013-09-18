@@ -23,7 +23,11 @@ import com.rockblade.util.StockUtil;
 public class Calculator {
 
 	public static void main(String... args) {
-		getTopNAmountInSHStock(10);
+		List<Stock> targetStockList = getTopNAmountInSHStock(10);
+		for(Stock stock : targetStockList){
+			System.out.println(stock.toString());
+		}
+		
 	}
 
 	public static List<Stock> getTopNAmountInSHStock(int n) {
@@ -36,7 +40,7 @@ public class Calculator {
 			currentSHStockAmountMap.put(entry.getKey(), entry.getValue().getAmount());
 		}
 
-		StockUtil.sortMapByValue(currentSHStockAmountMap);
+		StockUtil.sortMapByValueInDesc(currentSHStockAmountMap);
 
 		Iterator<String> it = currentSHStockAmountMap.keySet().iterator();
 		for (int i = 0; i < n; i++) {

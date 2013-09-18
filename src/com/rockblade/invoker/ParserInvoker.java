@@ -86,6 +86,7 @@ public class ParserInvoker {
 		int stockSize = StockCache.getSHStockIdList().size();
 		List<Stock> stockList = new ArrayList<>(stockSize);
 		Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
+		Map<String, Stock> currentSHStockMap = StockCache.getCurrentSHStockMap();
 		String[] stockIdArrays = new String[stockSize];
 
 		try {
@@ -99,6 +100,7 @@ public class ParserInvoker {
 			Map<Date, Stock> tmpStockMap = shStockMap.get(stock.getStockId());
 			tmpStockMap.put(new Date(), stock);
 			shStockMap.put(stock.getStockId(), tmpStockMap);
+			currentSHStockMap.put(stock.getStockId(), stock);
 		}
 	}
 }
