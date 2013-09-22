@@ -71,10 +71,11 @@ public class ParserInvoker {
 				// here is new HashMap , cause first time , there is not score
 				// in cache
 				Map<Date, Stock> tmpStockMap = new HashMap<>();
-				tmpStockMap.put(stock.getTime(), stock);
-				shStockMap.put(stock.getStockId(), tmpStockMap);
+				if (!stock.isSuspension()) {
+					tmpStockMap.put(stock.getTime(), stock);
+					shStockMap.put(stock.getStockId(), tmpStockMap);
+				}
 			}
-
 		}
 	}
 
