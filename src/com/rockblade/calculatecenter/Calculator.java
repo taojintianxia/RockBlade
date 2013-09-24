@@ -75,7 +75,7 @@ public class Calculator {
 			counter++;
 		}
 
-		StockCache.setSHStockTopAmountDifferenceMap(shTopNAmountDifStockMap);
+		StockCache.setSHStockIndexDifferenceMap(shTopNAmountDifStockMap);
 	}
 
 	/**
