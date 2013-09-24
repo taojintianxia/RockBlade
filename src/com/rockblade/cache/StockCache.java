@@ -30,8 +30,8 @@ public class StockCache {
 	private static List<String> SZStockIdList = new ArrayList<>(ZH_STOCK_CACHE_NUM);
 	private static Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>();
 	private static Map<String, Map<Date, Stock>> SZStockMap = new LinkedHashMap<>();
-	private static Map<String, Double> SHStockTopAmountDifferenceMap = new LinkedHashMap<>();
-	private static Map<String, Double> SZStockTopAmountDifferenceMap = new LinkedHashMap<>();
+	private static Map<String, Double> SHStockIndexDifferenceMap = new LinkedHashMap<>();
+	private static Map<String, Double> SZStockIndexDifferenceMap = new LinkedHashMap<>();
 
 	public static Map<String, BasicStockInfo> getBasicStockInfoPool() {
 		return basicStockInfoPool;
@@ -89,20 +89,20 @@ public class StockCache {
 		StockCache.currentSHStockMap = currentSHStockMap;
 	}
 
-	public static Map<String, Double> getSHStockTopAmountDifferenceMap() {
-		return SHStockTopAmountDifferenceMap;
+	public static Map<String, Double> getSHStockIndexDifferenceMap() {
+		return SHStockIndexDifferenceMap;
 	}
 
-	public static void setSHStockTopAmountDifferenceMap(Map<String, Double> sHStockTopAmountDifferenceMap) {
-		SHStockTopAmountDifferenceMap = sHStockTopAmountDifferenceMap;
+	public static void setSHStockIndexDifferenceMap(Map<String, Double> sHStockIndexDifferenceMap) {
+		SHStockIndexDifferenceMap = sHStockIndexDifferenceMap;
 	}
 
-	public static Map<String, Double> getSZStockTopAmountDifferenceMap() {
-		return SZStockTopAmountDifferenceMap;
+	public static Map<String, Double> getSZStockIndexDifferenceMap() {
+		return SZStockIndexDifferenceMap;
 	}
 
-	public static void setSZStockTopAmountDifferenceMap(Map<String, Double> sZStockTopAmountDifferenceMap) {
-		SZStockTopAmountDifferenceMap = sZStockTopAmountDifferenceMap;
+	public static void setSZStockIndexDifferenceMap(Map<String, Double> sZStockIndexDifferenceMap) {
+		SZStockIndexDifferenceMap = sZStockIndexDifferenceMap;
 	}
 
 }
