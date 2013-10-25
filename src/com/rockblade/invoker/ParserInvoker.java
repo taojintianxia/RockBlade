@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.rockblade.cache.StockCache;
 import com.rockblade.helper.StockIdReader;
 import com.rockblade.model.Stock;
-import com.rockblade.parsecenter.URLParser;
+import com.rockblade.parsecenter.impl.OnlineAPIParserImpl;
 import com.rockblade.util.StockUtil;
 
 public class ParserInvoker {
@@ -55,7 +55,7 @@ public class ParserInvoker {
 		}
 
 		if (StockCache.getSHStockMap().isEmpty()) {
-			URLParser urlParser = new URLParser();
+			OnlineAPIParserImpl urlParser = new OnlineAPIParserImpl();
 			int stockSize = StockCache.getSHStockIdList().size();
 			List<Stock> stockList = new ArrayList<>(stockSize);
 			Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
@@ -83,7 +83,7 @@ public class ParserInvoker {
 	 * update stock from online
 	 */
 	public void updateStocks() {
-		URLParser urlParser = new URLParser();
+		OnlineAPIParserImpl urlParser = new OnlineAPIParserImpl();
 		int stockSize = StockCache.getSHStockIdList().size();
 		List<Stock> stockList = new ArrayList<>(stockSize);
 		Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();

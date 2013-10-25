@@ -1,4 +1,4 @@
-package com.rockblade.parsecenter;
+package com.rockblade.parsecenter.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,13 +34,13 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public class URLParser {
+public class OnlineAPIParserImpl {
 
-	final static Logger logger = LoggerFactory.getLogger(URLParser.class);
+	final static Logger logger = LoggerFactory.getLogger(OnlineAPIParserImpl.class);
 
-	private List<String> stockStrDataList;
+	private List<String> stockStrDataList ;
 
-	private String getURLByStockId(final String stockId) {
+	public String retriveURLStrDataByStockId(final String stockId) {
 		String data = "";
 		try {
 			URL url = new URL(StockServerFetchFactory.fetchStockURL() + stockId);
