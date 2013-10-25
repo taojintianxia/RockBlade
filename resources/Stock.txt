@@ -7,3 +7,4 @@ https://developers.google.com/apps-script/reference/finance/?csw=1
 
 http://data.eastmoney.com/zjlx/601118.html
 http://www.cnblogs.com/luluping/archive/2010/11/15/1877817.html
+http://api.money.126.net/data/feed/1002151,0600036(深市前面是0,滬市前面是1)

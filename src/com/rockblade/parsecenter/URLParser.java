@@ -38,9 +38,9 @@ public class URLParser {
 
 	final static Logger logger = LoggerFactory.getLogger(URLParser.class);
 
-	private List<String> stockStrDataList ;
+	private List<String> stockStrDataList;
 
-	public String retriveURLStrDataByStockId(final String stockId) {
+	private String getURLByStockId(final String stockId) {
 		String data = "";
 		try {
 			URL url = new URL(StockServerFetchFactory.fetchStockURL() + stockId);

@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Strings;
+
 /**
  * 
  * 
@@ -20,10 +22,17 @@ public class StockUtil {
 	private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
+	public final static String SHANGHAI_STOCK_EXCHANGE = "SH";
+	public final static String SHENZHEN_STOCK_EXCHANGE = "SZ";
+
 	public static enum StockProperties {
 
-		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="), STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"), KEY_FRO_STOCK_IN_RESOURCES(
-				"stock_url"), SINA_SITE("hq.sinajs.cn"), GOOGLE_SITE(""), STOCK_ID_FILE("resources/StockId");
+		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="),
+		STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"),
+		KEY_FRO_STOCK_IN_RESOURCES("stock_url"),
+		SINA_SITE("hq.sinajs.cn"),
+		GOOGLE_SITE(""),
+		STOCK_ID_FILE("resources/StockId");
 
 		private String content;
 
@@ -57,6 +66,28 @@ public class StockUtil {
 
 	public static SimpleDateFormat getTimeFormat() {
 		return timeFormat;
+	}
+
+	public static String getStockIdListPath(String stockExchange) {
+
+		String path = new String();
+
+		if (Strings.isNullOrEmpty(stockExchange)) {
+			throw new IllegalArgumentException();
+		}
+
+		switch (stockExchange) {
+		case SHANGHAI_STOCK_EXCHANGE:
+			path = "resources/StockId/SH.txt";
+			break;
+		case SHENZHEN_STOCK_EXCHANGE:
+			path = "resources/StockId/SZ.txt";
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+
+		return path;
 	}
 
 	/**
