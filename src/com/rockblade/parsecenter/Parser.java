@@ -15,7 +15,7 @@ import com.rockblade.model.Stock;
 
 public interface Parser {
 	
-	public List<Stock> getStocksByIdList(List<String> stockIdList) throws InterruptedException, IOException;
+	public List<Stock> getStocksByIds(List<String> stockIdList) throws InterruptedException, IOException;
 
 	public Stock getStockById(String stockId);
 	

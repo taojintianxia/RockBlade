@@ -35,7 +35,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 	}
 
 	@Override
-	public List<Stock> getStocksByIdList(List<String> stockIdList) throws InterruptedException, IOException {
+	public List<Stock> getStocksByIds(List<String> stockIdList) throws InterruptedException, IOException {
 
 		final int stocksSize = stockIdList.size();
 		final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
@@ -46,7 +46,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		try {
 			HttpGet[] requests = new HttpGet[stocksSize];
 			for (int i = 0; i < stocksSize; i++) {
-				requests[i] = new HttpGet(getOnlineAPIURL() + stockIdList.get(i));
+				requests[i] = new HttpGet(onlineAPIPattern.getUrl() + addPrefixForStockId(stockIdList.get(i)));
 			}
 			final CountDownLatch latch = new CountDownLatch(requests.length);
 			for (final HttpGet request : requests) {
@@ -56,7 +56,8 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 						latch.countDown();
 						try {
 							String stockData = EntityUtils.toString(response.getEntity());
-							stockList.add(parseOnlineStrDataToStock(stockData));
+							Stock stock = parseOnlineStrDataToStock(stockData);
+							stockList.add(stock);
 						} catch (IOException | org.apache.http.ParseException e) {
 							logger.error(e.getLocalizedMessage());
 						}
@@ -80,7 +81,6 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		}
 
 		return stockList;
-
 	}
 
 	@Override
@@ -161,8 +161,20 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 	public static void main(String... args) {
 		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
-		Stock testStock = parser.getStockById("600008");
-		System.out.println(testStock.toString());
+		List<Stock> stockList = new ArrayList<>();
+		List<String> stockIdList = new ArrayList<>();
+		stockIdList.add("600008");
+		stockIdList.add("002024");
+		try {
+			stockList = parser.getStocksByIds(stockIdList);
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(stockList.size());
+		for (Stock stock : stockList) {
+			System.out.print(stock.toString());
+		}
 	}
 
 }
