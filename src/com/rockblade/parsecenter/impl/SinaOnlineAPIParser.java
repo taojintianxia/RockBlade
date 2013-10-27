@@ -56,6 +56,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 						latch.countDown();
 						try {
 							String stockData = EntityUtils.toString(response.getEntity());
+							System.out.println(stockData);
 							Stock stock = parseOnlineStrDataToStock(stockData);
 							stockList.add(stock);
 						} catch (IOException | org.apache.http.ParseException e) {
