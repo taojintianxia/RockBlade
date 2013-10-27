@@ -1,5 +1,6 @@
 package com.rockblade.parsecenter;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.rockblade.model.Stock;
@@ -14,7 +15,8 @@ import com.rockblade.model.Stock;
 
 public interface Parser {
 	
-	public List<Stock> getStocksByIdList(List<String> stockIdList);
+	public List<Stock> getStocksByIdList(List<String> stockIdList) throws InterruptedException, IOException;
 
 	public Stock getStockById(String stockId);
+	
 }

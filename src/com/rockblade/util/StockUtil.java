@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Strings;
+import com.rockblade.helper.PropertiesHelper;
 
 /**
  * 
@@ -24,15 +25,17 @@ public class StockUtil {
 
 	public final static String SHANGHAI_STOCK_EXCHANGE = "SH";
 	public final static String SHENZHEN_STOCK_EXCHANGE = "SZ";
+	public final static String PROPERTIES_FILE = "resources/stock_resources.properties";
+	public final static String ONLINE_API = "online_stock_parser";
+	public final static String SINA_ONLINE_API = "sina_stock_url";
+
+	public final static String ENCODING_GBK = "GBK";
+	public final static String ENCODING_UTF = "UTF-8";
 
 	public static enum StockProperties {
 
-		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="),
-		STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"),
-		KEY_FRO_STOCK_IN_RESOURCES("stock_url"),
-		SINA_SITE("hq.sinajs.cn"),
-		GOOGLE_SITE(""),
-		STOCK_ID_FILE("resources/StockId");
+		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="), STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"), KEY_FRO_STOCK_IN_RESOURCES("stock_url"), SINA_SITE("hq.sinajs.cn"), GOOGLE_SITE(
+				""), STOCK_ID_FILE("resources/StockId");
 
 		private String content;
 
@@ -68,6 +71,12 @@ public class StockUtil {
 		return timeFormat;
 	}
 
+	/**
+	 * get the path of txt file which store the stock name-id pair
+	 * 
+	 * @param stockExchange
+	 * @return
+	 */
 	public static String getStockIdListPath(String stockExchange) {
 
 		String path = new String();
@@ -161,5 +170,34 @@ public class StockUtil {
 			}
 			System.out.println("------------------------");
 		}
+	}
+
+	public static String getStockExchangeByStockId(String stockId) {
+
+		String stockExchange = "";
+
+		if (Strings.isNullOrEmpty(stockId) || stockId.length() != 6) {
+			throw new IllegalArgumentException();
+		}
+
+		if (stockId.startsWith("0")) {
+			stockExchange = SHENZHEN_STOCK_EXCHANGE;
+		} else if (stockId.startsWith("6")) {
+			stockExchange = SHANGHAI_STOCK_EXCHANGE;
+		} else if (stockId.startsWith("3")) {
+			// 自选股
+		} else {
+			throw new IllegalArgumentException();
+		}
+
+		return stockExchange;
+	}
+	
+	public static String getOnlineAPIURL(){
+		return PropertiesHelper.getInstance().getValue(ONLINE_API);
+	}
+	
+	public static String getValue(String key){
+		return PropertiesHelper.getInstance().getValue(key);
 	}
 }
