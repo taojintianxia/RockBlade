@@ -41,12 +41,12 @@ public class StockIdReader {
 
 			while ((readLine = bufferedReaderForSH.readLine()) != null) {
 				stockArray[1] = new String(readLine.substring(readLine.lastIndexOf(" ") + 1));
-				shStockIdList.add("sh" + stockArray[1]);
+				shStockIdList.add(stockArray[1]);
 			}
 
 			while ((readLine = bufferedReaderForSZ.readLine()) != null) {
 				stockArray[1] = new String(readLine.substring(readLine.lastIndexOf(" ") + 1));
-				szStockIdList.add("sz" + stockArray[1]);
+				szStockIdList.add(stockArray[1]);
 			}
 
 			// release the reference
