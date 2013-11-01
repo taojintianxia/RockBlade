@@ -13,13 +13,13 @@ import java.util.Date;
 
 public class Stock {
 
-	// 股票唯一號碼
+	// 股票唯一号码
 	private String stockId;
-	// 股票名稱
+	// 股票名称
 	private String stockName;
-	// 今日開盤價
+	// 今日开盘价
 	private double open;
-	// 昨日收盤價
+	// 昨日收盘价
 	private double preClose;
 	// 當前價格
 	private double currentPrice;

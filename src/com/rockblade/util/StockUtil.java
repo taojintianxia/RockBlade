@@ -1,6 +1,5 @@
 package com.rockblade.util;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,9 +19,6 @@ import com.rockblade.helper.PropertiesHelper;
 
 public class StockUtil {
 
-	private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
 	public final static String SHANGHAI_STOCK_EXCHANGE = "SH";
 	public final static String SHENZHEN_STOCK_EXCHANGE = "SZ";
 	public final static String PROPERTIES_FILE = "resources/stock_resources.properties";
@@ -34,8 +30,12 @@ public class StockUtil {
 
 	public static enum StockProperties {
 
-		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="), STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"), KEY_FRO_STOCK_IN_RESOURCES("stock_url"), SINA_SITE("hq.sinajs.cn"), GOOGLE_SITE(
-				""), STOCK_ID_FILE("resources/StockId");
+		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="),
+		STOCK_RESOURCES_PROPERTIES_FILE("resources/stock_resources.properties"),
+		KEY_FRO_STOCK_IN_RESOURCES("stock_url"),
+		SINA_SITE("hq.sinajs.cn"),
+		GOOGLE_SITE(""),
+		STOCK_ID_FILE("resources/StockId");
 
 		private String content;
 
@@ -61,14 +61,6 @@ public class StockUtil {
 		public String getContent() {
 			return content;
 		}
-	}
-
-	public static SimpleDateFormat getDataFormat() {
-		return dateFormat;
-	}
-
-	public static SimpleDateFormat getTimeFormat() {
-		return timeFormat;
 	}
 
 	/**
@@ -192,12 +184,12 @@ public class StockUtil {
 
 		return stockExchange;
 	}
-	
-	public static String getOnlineAPIURL(){
+
+	public static String getOnlineAPIURL() {
 		return PropertiesHelper.getInstance().getValue(ONLINE_API);
 	}
-	
-	public static String getValue(String key){
+
+	public static String getValue(String key) {
 		return PropertiesHelper.getInstance().getValue(key);
 	}
 }

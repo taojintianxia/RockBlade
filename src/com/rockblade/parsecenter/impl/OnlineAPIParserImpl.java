@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,8 +161,10 @@ public class OnlineAPIParserImpl {
 		stock.setSell4Price(Double.parseDouble(dataList.get(27)));
 		stock.setSell5Volume(Double.parseDouble(dataList.get(28)));
 		stock.setSell5Price(Double.parseDouble(dataList.get(29)));
-		stock.setDate(StockUtil.getDataFormat().parse(dataList.get(30)));
-		stock.setTime(StockUtil.getTimeFormat().parse(dataList.get(31)));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		stock.setDate(dateFormat.parse(dataList.get(30)));
+		stock.setTime(timeFormat.parse(dataList.get(31)));
 		stock.setSuspension(false);
 
 		return stock;

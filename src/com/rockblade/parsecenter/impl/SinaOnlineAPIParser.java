@@ -4,13 +4,12 @@ import static com.rockblade.util.StockUtil.ENCODING_GBK;
 import static com.rockblade.util.StockUtil.SHANGHAI_STOCK_EXCHANGE;
 import static com.rockblade.util.StockUtil.SHENZHEN_STOCK_EXCHANGE;
 import static com.rockblade.util.StockUtil.SINA_ONLINE_API;
-import static com.rockblade.util.StockUtil.getDataFormat;
 import static com.rockblade.util.StockUtil.getStockExchangeByStockId;
-import static com.rockblade.util.StockUtil.getTimeFormat;
 import static com.rockblade.util.StockUtil.getValue;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,8 +62,8 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 					// get the response body as an array of bytes
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
-						// stocksList.add(parseOnlineStrDataToStock(EntityUtils.toString(entity)));
-						System.out.println(EntityUtils.toString(entity));
+						stocksList.add(parseOnlineStrDataToStock(EntityUtils.toString(entity)));
+						// System.out.println(EntityUtils.toString(entity));
 					}
 				} finally {
 					response.close();
@@ -79,6 +78,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 	@Override
 	public List<Stock> getStocksByIds(List<String> stockIdList) throws InterruptedException, IOException {
 
+		stocksList.clear();
 		final int stockAmount = stockIdList.size();
 		String[] uriArray = new String[stockAmount];
 		for (int i = 0; i < stockAmount; i++) {
@@ -144,6 +144,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 	}
 
 	private static Stock parseOnlineStrDataToStock(String strData) {
+
 		Stock stock = new Stock();
 		String stockId = new String(strData.substring(13, strData.indexOf("=")));
 		stock.setStockId(stockId);
@@ -184,10 +185,12 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		stock.setSell5Volume(Double.parseDouble(dataList.get(28)));
 		stock.setSell5Price(Double.parseDouble(dataList.get(29)));
 		try {
-			stock.setDate(getDataFormat().parse(dataList.get(30)));
-			stock.setTime(getTimeFormat().parse(dataList.get(31)));
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+			stock.setDate(dateFormat.parse(dataList.get(30)));
+			stock.setTime(timeFormat.parse(dataList.get(31)));
 		} catch (ParseException e) {
-
+			System.out.println(e);
 		}
 
 		stock.setSuspension(false);
@@ -198,7 +201,6 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 	public static void main(String... args) {
 		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
-		stocksList.clear();
 		List<Stock> stockList = new ArrayList<>();
 		List<String> stockIdList = new ArrayList<>();
 
