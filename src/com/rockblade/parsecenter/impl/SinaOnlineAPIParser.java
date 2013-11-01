@@ -5,7 +5,6 @@ import static com.rockblade.util.StockUtil.SHANGHAI_STOCK_EXCHANGE;
 import static com.rockblade.util.StockUtil.SHENZHEN_STOCK_EXCHANGE;
 import static com.rockblade.util.StockUtil.SINA_ONLINE_API;
 import static com.rockblade.util.StockUtil.getDataFormat;
-import static com.rockblade.util.StockUtil.getOnlineAPIURL;
 import static com.rockblade.util.StockUtil.getStockExchangeByStockId;
 import static com.rockblade.util.StockUtil.getTimeFormat;
 import static com.rockblade.util.StockUtil.getValue;
@@ -15,73 +14,110 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import com.rockblade.cache.StockCache;
+import com.rockblade.helper.StockIdReader;
 import com.rockblade.model.Stock;
 import com.rockblade.parsecenter.OnlineAPIParser;
 
 public class SinaOnlineAPIParser extends OnlineAPIParser {
 
+	private static List<Stock> stocksList = new ArrayList<>();
+
 	public SinaOnlineAPIParser() {
 		initOnlineAPIPattern();
+	}
+
+	private static class GetThread extends Thread {
+
+		private final CloseableHttpClient httpClient;
+		private final HttpContext context;
+		private final HttpGet httpget;
+		private final int id;
+
+		public GetThread(CloseableHttpClient httpClient, HttpGet httpget, int id) {
+			this.httpClient = httpClient;
+			this.context = new BasicHttpContext();
+			this.httpget = httpget;
+			this.id = id;
+		}
+
+		/**
+		 * Executes the GetMethod and prints some status information.
+		 */
+		@Override
+		public void run() {
+			try {
+				CloseableHttpResponse response = httpClient.execute(httpget, context);
+				try {
+					// get the response body as an array of bytes
+					HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						// stocksList.add(parseOnlineStrDataToStock(EntityUtils.toString(entity)));
+						System.out.println(EntityUtils.toString(entity));
+					}
+				} finally {
+					response.close();
+				}
+			} catch (Exception e) {
+				System.out.println(id + " - error: " + e);
+			}
+		}
+
 	}
 
 	@Override
 	public List<Stock> getStocksByIds(List<String> stockIdList) throws InterruptedException, IOException {
 
-		final int stocksSize = stockIdList.size();
-		final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
-		final CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().setDefaultRequestConfig(requestConfig).build();
-		final List<Stock> stockList = new ArrayList<>(stocksSize);
+		final int stockAmount = stockIdList.size();
+		String[] uriArray = new String[stockAmount];
+		for (int i = 0; i < stockAmount; i++) {
+			uriArray[i] = getValue(SINA_ONLINE_API) + addPrefixForStockId(stockIdList.get(i));
+		}
 
-		httpclient.start();
+		// Create an HttpClient with the ThreadSafeClientConnManager.
+		// This connection manager must be used if more than one thread will
+		// be using the HttpClient.
+		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+		cm.setMaxTotal(100);
+
+		CloseableHttpClient httpclient = HttpClients.custom().setConnectionManager(cm).build();
 		try {
-			HttpGet[] requests = new HttpGet[stocksSize];
-			for (int i = 0; i < stocksSize; i++) {
-				requests[i] = new HttpGet(onlineAPIPattern.getUrl() + addPrefixForStockId(stockIdList.get(i)));
+			// create an array of URIs to perform GETs on
+			String[] urisToGet = uriArray;
+
+			// create a thread for each URI
+			GetThread[] threads = new GetThread[urisToGet.length];
+			for (int i = 0; i < threads.length; i++) {
+				HttpGet httpget = new HttpGet(urisToGet[i]);
+				threads[i] = new GetThread(httpclient, httpget, i + 1);
 			}
-			final CountDownLatch latch = new CountDownLatch(requests.length);
-			for (final HttpGet request : requests) {
-				httpclient.execute(request, new FutureCallback<HttpResponse>() {
 
-					public void completed(final HttpResponse response) {
-						latch.countDown();
-						try {
-							String stockData = EntityUtils.toString(response.getEntity());
-							System.out.println(stockData);
-							Stock stock = parseOnlineStrDataToStock(stockData);
-							stockList.add(stock);
-						} catch (IOException | org.apache.http.ParseException e) {
-							logger.error(e.getLocalizedMessage());
-						}
-					}
-
-					public void failed(final Exception ex) {
-						latch.countDown();
-						System.out.println(request.getRequestLine() + "->" + ex);
-					}
-
-					public void cancelled() {
-						latch.countDown();
-						System.out.println(request.getRequestLine() + " cancelled");
-					}
-
-				});
+			// start the threads
+			for (int j = 0; j < threads.length; j++) {
+				threads[j].start();
 			}
-			latch.await();
+
+			// join the threads
+			for (int j = 0; j < threads.length; j++) {
+				threads[j].join();
+			}
+
 		} finally {
 			httpclient.close();
 		}
 
-		return stockList;
+		return stocksList;
 	}
 
 	@Override
@@ -107,7 +143,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		return sinaStockId;
 	}
 
-	private Stock parseOnlineStrDataToStock(String strData) {
+	private static Stock parseOnlineStrDataToStock(String strData) {
 		Stock stock = new Stock();
 		String stockId = new String(strData.substring(13, strData.indexOf("=")));
 		stock.setStockId(stockId);
@@ -162,10 +198,13 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 	public static void main(String... args) {
 		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
+		stocksList.clear();
 		List<Stock> stockList = new ArrayList<>();
 		List<String> stockIdList = new ArrayList<>();
-		stockIdList.add("600008");
-		stockIdList.add("002024");
+
+		StockIdReader reader = new StockIdReader();
+		reader.readStockIdFromFile();
+		stockIdList.addAll(StockCache.getSHStockIdList());
 		try {
 			stockList = parser.getStocksByIds(stockIdList);
 		} catch (InterruptedException | IOException e) {
