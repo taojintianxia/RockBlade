@@ -357,8 +357,8 @@ public class Stock {
 	@Override
 	public String toString() {
 		DecimalFormat decimalFormat = new DecimalFormat(".##");
-		return "Stock Name : " + getStockName() + " , Current Price : " + getCurrentPrice() + " , Transaction Volume : " + decimalFormat.format(getTransactionVolume() / 100)
-				+ "手 , Amount : " + decimalFormat.format(getAmount() / 10000) + "萬 \n";
+		return "Stock Name : " + getStockName() + " , Current Price : " + getCurrentPrice() + " , Transaction Volume : " + decimalFormat.format(getTransactionVolume() / 100) + "手 , Amount : "
+				+ decimalFormat.format(getAmount() / 10000) + "萬" + " Yesterday Close" + getPreClose() + " Today Open" + getOpen() + "\n";
 	}
 
 }

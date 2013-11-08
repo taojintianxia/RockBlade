@@ -1,13 +1,17 @@
 package com.rockblade.util;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Strings;
 import com.rockblade.helper.PropertiesHelper;
+import com.rockblade.model.Stock;
 
 /**
  * 
@@ -191,5 +195,23 @@ public class StockUtil {
 
 	public static String getValue(String key) {
 		return PropertiesHelper.getInstance().getValue(key);
+	}
+
+	public static void printOutToFile(List<Stock> stockList) {
+		FileWriter writer;
+		try {
+			writer = new FileWriter("c:\\stock.txt", true);
+			int stockAmount = stockList.size();
+			for (int i = 0; i < stockAmount; i++) {
+				Stock stock = stockList.get(i);
+				writer.write(stock.toString());
+				writer.write("\r\n");
+				writer.flush();
+			}
+
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
