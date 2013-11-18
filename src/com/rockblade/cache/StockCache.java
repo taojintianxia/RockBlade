@@ -22,6 +22,9 @@ public class StockCache {
 
 	public final static int SH_STOCK_CACHE_NUM = 1000;
 	public final static int ZH_STOCK_CACHE_NUM = 1500;
+	
+	//since every fixed time , there will be some stock data stores to DB.this map stores the index of every stock.
+	public static Map<String , Map<Integer , Integer>> persistenceIndexer = new HashMap<>();
 
 	private static Map<String, Map<Date, Stock>> allStocksMapPool = new HashMap<>();
 	private static Map<String, BasicStockInfo> basicStockInfoPool = new HashMap<>();
@@ -103,6 +106,12 @@ public class StockCache {
 
 	public static void setSZStockIndexDifferenceMap(Map<String, Double> sZStockIndexDifferenceMap) {
 		SZStockIndexDifferenceMap = sZStockIndexDifferenceMap;
+	}
+	
+	public static void cleanCache(){
+		persistenceIndexer.clear();
+		allStocksMapPool.clear();
+		basicStockInfoPool.clear();
 	}
 
 }
