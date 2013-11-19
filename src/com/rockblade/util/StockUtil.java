@@ -3,9 +3,9 @@ package com.rockblade.util;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +32,18 @@ public class StockUtil {
 	public final static String ENCODING_GBK = "GBK";
 	public final static String ENCODING_UTF = "UTF-8";
 
+	static final Calendar FORENOON_START = Calendar.getInstance();
+	static final Calendar FORENOON_END = Calendar.getInstance();
+	static final Calendar AFTERNOON_START = Calendar.getInstance();
+	static final Calendar AFTERNOON_END = Calendar.getInstance();
+
+	static {
+		initCalendar(FORENOON_START, 9, 30, 0);
+		initCalendar(FORENOON_END, 11, 30, 0);
+		initCalendar(AFTERNOON_START, 13, 0, 0);
+		initCalendar(AFTERNOON_END, 15, 0, 0);
+	}
+
 	public static enum StockProperties {
 
 		DEFAULT_STOCK_URL("http://hq.sinajs.cn/list="),
@@ -50,7 +62,6 @@ public class StockUtil {
 		public String getContent() {
 			return content;
 		}
-
 	}
 
 	public static enum Messages {
@@ -181,7 +192,7 @@ public class StockUtil {
 		} else if (stockId.startsWith("6")) {
 			stockExchange = SHANGHAI_STOCK_EXCHANGE;
 		} else if (stockId.startsWith("3")) {
-			// 自选股
+			// 创业板
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -213,5 +224,25 @@ public class StockUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static boolean isInTradingTime() {
+		boolean result = false;
+		Calendar now = Calendar.getInstance();
+
+		if (now.after(FORENOON_START) && now.before(FORENOON_END)) {
+			result = true;
+		}
+		if (now.after(AFTERNOON_START) && now.before(AFTERNOON_END)) {
+			result = true;
+		}
+
+		return result;
+	}
+
+	private static void initCalendar(Calendar cal, int date, int minute, int second) {
+		cal.set(Calendar.HOUR_OF_DAY, date);
+		cal.set(Calendar.MINUTE, minute);
+		cal.set(Calendar.SECOND, second);
 	}
 }

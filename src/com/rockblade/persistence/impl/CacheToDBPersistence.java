@@ -18,7 +18,10 @@ public class CacheToDBPersistence implements StockPersistence{
 
 	@Override
 	public void saveStock(Map<String, Map<Date, Stock>> stockMap) {
-		
+		if(stockMap.isEmpty()){
+			//cache is empty , it's in rest time or could not retrieve data from source.
+			//check if it's in rest time
+		}
 	}
 
 }

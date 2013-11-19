@@ -26,8 +26,7 @@ public class StockCache {
 	//since every fixed time , there will be some stock data stores to DB.this map stores the index of every stock.
 	public static Map<String , Map<Integer , Integer>> persistenceIndexer = new HashMap<>();
 
-	private static Map<String, Map<Date, Stock>> allStocksMapPool = new HashMap<>();
-	private static Map<String, BasicStockInfo> basicStockInfoPool = new HashMap<>();
+	public static final Map<String, ArrayList<Stock>> ALL_STOCKS_CACHE = new HashMap<>();
 	private static Map<String, Stock> currentSHStockMap = new LinkedHashMap<>();
 	private static List<String> SHStockIdList = new ArrayList<>(SH_STOCK_CACHE_NUM);
 	private static List<String> SZStockIdList = new ArrayList<>(ZH_STOCK_CACHE_NUM);
@@ -35,22 +34,6 @@ public class StockCache {
 	private static Map<String, Map<Date, Stock>> SZStockMap = new LinkedHashMap<>();
 	private static Map<String, Double> SHStockIndexDifferenceMap = new LinkedHashMap<>();
 	private static Map<String, Double> SZStockIndexDifferenceMap = new LinkedHashMap<>();
-
-	public static Map<String, BasicStockInfo> getBasicStockInfoPool() {
-		return basicStockInfoPool;
-	}
-
-	public static void setBasicStockInfoPool(Map<String, BasicStockInfo> basicStockInfoPool) {
-		StockCache.basicStockInfoPool = basicStockInfoPool;
-	}
-
-	public static Map<String, Map<Date, Stock>> getAllStocksMapPool() {
-		return allStocksMapPool;
-	}
-
-	public static void setAllStocksMapPool(Map<String, Map<Date, Stock>> allStocksMapPool) {
-		StockCache.allStocksMapPool = allStocksMapPool;
-	}
 
 	public static Map<String, Map<Date, Stock>> getSHStockMap() {
 		return SHStockMap;
@@ -110,8 +93,7 @@ public class StockCache {
 	
 	public static void cleanCache(){
 		persistenceIndexer.clear();
-		allStocksMapPool.clear();
-		basicStockInfoPool.clear();
+		ALL_STOCKS_CACHE.clear();
 	}
 
 }
