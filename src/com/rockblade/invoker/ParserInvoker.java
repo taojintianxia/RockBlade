@@ -49,20 +49,20 @@ public class ParserInvoker {
 	 * @throws IOException
 	 */
 	private void inintALLStockMapCache() throws IOException {
-		if (StockCache.getSHStockIdList().isEmpty()) {
+		if (StockCache.ALL_STOCK_ID.isEmpty()) {
 			logger.error(StockUtil.Messages.STOCKID_NOT_READ_FROM_TXT_FILE.getContent());
 			throw new IOException(StockUtil.Messages.STOCKID_NOT_READ_FROM_TXT_FILE.getContent());
 		}
 
 		if (StockCache.getSHStockMap().isEmpty()) {
 			OnlineAPIParserImpl urlParser = new OnlineAPIParserImpl();
-			int stockSize = StockCache.getSHStockIdList().size();
+			int stockSize = StockCache.ALL_STOCK_ID.size();
 			List<Stock> stockList = new ArrayList<>(stockSize);
 			Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
 			String[] stockIdArrays = new String[stockSize];
 
 			try {
-				stockList = urlParser.getStocksByStockIds(StockCache.getSHStockIdList().toArray(stockIdArrays));
+				stockList = urlParser.getStocksByStockIds(StockCache.ALL_STOCK_ID.toArray(stockIdArrays));
 			} catch (IOException | InterruptedException | ParseException e) {
 				e.printStackTrace();
 			}
@@ -84,14 +84,14 @@ public class ParserInvoker {
 	 */
 	public void updateStocks() {
 		OnlineAPIParserImpl urlParser = new OnlineAPIParserImpl();
-		int stockSize = StockCache.getSHStockIdList().size();
+		int stockSize = StockCache.ALL_STOCK_ID.size();
 		List<Stock> stockList = new ArrayList<>(stockSize);
 		Map<String, Map<Date, Stock>> shStockMap = StockCache.getSHStockMap();
 		Map<String, Stock> currentSHStockMap = StockCache.getCurrentSHStockMap();
 		String[] stockIdArrays = new String[stockSize];
 
 		try {
-			stockList = urlParser.getStocksByStockIds(StockCache.getSHStockIdList().toArray(stockIdArrays));
+			stockList = urlParser.getStocksByStockIds(StockCache.ALL_STOCK_ID.toArray(stockIdArrays));
 		} catch (IOException | InterruptedException | ParseException e) {
 			e.printStackTrace();
 		}
