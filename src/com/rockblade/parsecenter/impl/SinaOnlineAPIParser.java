@@ -1,5 +1,7 @@
 package com.rockblade.parsecenter.impl;
 
+import static com.rockblade.cache.StockCache.ALL_STOCKS_CACHE;
+import static com.rockblade.cache.StockCache.ALL_STOCK_ID;
 import static com.rockblade.util.StockUtil.ENCODING_GBK;
 import static com.rockblade.util.StockUtil.SHANGHAI_STOCK_EXCHANGE;
 import static com.rockblade.util.StockUtil.SHENZHEN_STOCK_EXCHANGE;
@@ -13,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -32,8 +33,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import com.rockblade.cache.AllStockCache;
-import com.rockblade.cache.StockCache;
 import com.rockblade.helper.StockIdReader;
 import com.rockblade.model.Stock;
 import com.rockblade.parsecenter.OnlineAPIParser;
@@ -43,7 +42,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 	private static List<Stock> stocksList = new ArrayList<>();
 
-	private final HttpGet[] SHStockRequests = new HttpGet[883];
+	private HttpGet[] AllStocksRequests;
 
 	// private final HttpGet[] SZStockRequests;
 
@@ -213,10 +212,11 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 	}
 
-	public void updateSHStockCache(List<String> stockIdList) throws InterruptedException, IOException {
-		int stockAmount = stockIdList.size();
+	public void updateAllStocksCache() throws InterruptedException, IOException {
+		int stockAmount = ALL_STOCK_ID.size();
+		AllStocksRequests = new HttpGet[stockAmount];
 		for (int i = 0; i < stockAmount; i++) {
-			SHStockRequests[i] = new HttpGet(getValue(SINA_ONLINE_API) + addPrefixForStockId(stockIdList.get(i)));
+			AllStocksRequests[i] = new HttpGet(getValue(SINA_ONLINE_API) + addPrefixForStockId(ALL_STOCK_ID.get(i)));
 		}
 
 		final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
@@ -224,7 +224,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 		httpclient.start();
 		try {
-			final HttpGet[] requests = SHStockRequests;
+			final HttpGet[] requests = AllStocksRequests;
 			final CountDownLatch latch = new CountDownLatch(requests.length);
 			for (final HttpGet request : requests) {
 				httpclient.execute(request, new FutureCallback<HttpResponse>() {
@@ -235,12 +235,17 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 							String stockStrData = EntityUtils.toString(response.getEntity());
 							System.out.println(stockStrData);
 							Stock stock = parseOnlineStrDataToStock(stockStrData);
-							if (AllStockCache.SH_STOCK_CACHE.get(stock.getStockId()) == null) {
-								LinkedHashMap<Date, Stock> timeValueMap = new LinkedHashMap<>();
-								timeValueMap.put(new Date(), stock);
-								AllStockCache.SH_STOCK_CACHE.put(stock.getStockId(), timeValueMap);
+							// first time get the stock info
+							if (ALL_STOCKS_CACHE.get(stock.getStockId()) == null) {
+								ArrayList<Stock> singleStockList = new ArrayList<>(1);
+								singleStockList.add(stock);
+								ALL_STOCKS_CACHE.put(stock.getStockId(), singleStockList);
 							} else {
-								AllStockCache.SH_STOCK_CACHE.get(stock.getStockId()).put(new Date(), stock);
+								int stockAmount = ALL_STOCKS_CACHE.get(stock.getStockId()).size();
+								Stock lastStock = ALL_STOCKS_CACHE.get(stock.getStockId()).get(stockAmount - 1);
+								if (lastStock.getCurrentPrice() != stock.getCurrentPrice()) {
+									ALL_STOCKS_CACHE.get(stock.getStockId()).add(stock);
+								}
 							}
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -277,7 +282,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		targetDate.setTime(System.currentTimeMillis() + 10 * 60 * 1000);
 		while (new Date().before(targetDate)) {
 			try {
-				stockList = parser.getStocksByIds(StockCache.getSHStockIdList());
+				stockList = parser.getStocksByIds(ALL_STOCK_ID);
 				System.out.println("==========stock list size : " + stockList.size() + "==========");
 				StockUtil.printOutToFile(stockList);
 			} catch (InterruptedException | IOException e) {
