@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -198,10 +199,12 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		stock.setSell5Volume(Double.parseDouble(dataList.get(28)));
 		stock.setSell5Price(Double.parseDouble(dataList.get(29)));
 		try {
+			Calendar cal = Calendar.getInstance();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-			stock.setDate(dateFormat.parse(dataList.get(30)));
-			stock.setTime(timeFormat.parse(dataList.get(31)));
+			cal.setTime(dateFormat.parse(dataList.get(30)));
+			cal.setTime(timeFormat.parse(dataList.get(31)));
+			stock.setTime(cal);
 		} catch (ParseException e) {
 			System.out.println(e);
 		}

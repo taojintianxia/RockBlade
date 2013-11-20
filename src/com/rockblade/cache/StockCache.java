@@ -24,9 +24,9 @@ public class StockCache {
 
 	// since every fixed time , there will be some stock data stores to DB.this
 	// map stores the index of every stock.
-	public static Map<String, Map<Integer, Integer>> persistenceIndexer = new HashMap<>();
+	public static Map<String, Integer[]> persistenceIndexer = new HashMap<>();
 
-	public static final Map<String, ArrayList<Stock>> ALL_STOCKS_CACHE = new HashMap<>();
+	public static final Map<String, List<Stock>> ALL_STOCKS_CACHE = new HashMap<>();
 
 	public static final List<String> ALL_STOCK_ID = new ArrayList<>();
 	private static Map<String, Stock> currentSHStockMap = new LinkedHashMap<>();

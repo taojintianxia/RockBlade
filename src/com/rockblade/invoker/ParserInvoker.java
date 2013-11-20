@@ -3,6 +3,7 @@ package com.rockblade.invoker;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,8 +73,8 @@ public class ParserInvoker {
 				// in cache
 				Map<Date, Stock> tmpStockMap = new HashMap<>();
 				if (!stock.isSuspension()) {
-					tmpStockMap.put(stock.getTime(), stock);
-					shStockMap.put(stock.getStockId(), tmpStockMap);
+//					tmpStockMap.put(stock.getTime(), stock);
+//					shStockMap.put(stock.getStockId(), tmpStockMap);
 				}
 			}
 		}
