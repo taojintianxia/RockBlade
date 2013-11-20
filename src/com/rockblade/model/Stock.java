@@ -1,6 +1,7 @@
 package com.rockblade.model;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -75,10 +76,8 @@ public class Stock {
 	private double sell5Volume;
 	// 賣五報價
 	private double sell5Price;
-	// 日期
-	private Date date;
 	// 時間
-	private Date time;
+	private Calendar time;
 	// 停牌
 	private boolean suspension;
 
@@ -330,19 +329,11 @@ public class Stock {
 		this.sell5Price = sell5Price;
 	}
 
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Date getTime() {
+	public Calendar getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(Calendar time) {
 		this.time = time;
 	}
 
@@ -358,7 +349,7 @@ public class Stock {
 	public String toString() {
 		DecimalFormat decimalFormat = new DecimalFormat(".##");
 		return "Stock Name : " + getStockName() + " , Current Price : " + getCurrentPrice() + " , Transaction Volume : " + decimalFormat.format(getTransactionVolume() / 100) + "手 , Amount : "
-				+ decimalFormat.format(getAmount() / 10000) + "萬" + " Yesterday Close" + getPreClose() + " Today Open" + getOpen() + "\n";
+				+ decimalFormat.format(getAmount() / 10000) + "萬" + " Yesterday Close " + getPreClose() + " Today Open " + getOpen() + "\n";
 	}
 
 }
