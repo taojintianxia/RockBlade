@@ -200,10 +200,8 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		stock.setSell5Price(Double.parseDouble(dataList.get(29)));
 		try {
 			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-			cal.setTime(dateFormat.parse(dataList.get(30)));
-			cal.setTime(timeFormat.parse(dataList.get(31)));
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			cal.setTime(formatter.parse(dataList.get(30) + " " + dataList.get(31)));
 			stock.setTime(cal);
 		} catch (ParseException e) {
 			System.out.println(e);

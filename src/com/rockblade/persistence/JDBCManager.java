@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class JDBCManager {
 			List<Stock> stockList = entry.getValue();
 			int start = stockMapIndexer.get(entry.getKey())[0];
 			int end = stockMapIndexer.get(entry.getKey())[0];
-			if (start == end) {
+			if (start == end && end != 0) {
 				continue;
 			}
 			for (int i = start; i <= end; i++) {
@@ -52,6 +53,7 @@ public class JDBCManager {
 	private void transferStockToPreparedStatment(Stock stock, PreparedStatement stmt) throws SQLException {
 		stmt.setString(1, stock.getStockId());
 		stmt.setDouble(2, stock.getAmount());
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getTime().getTime()));
 		stmt.setDate(3, new Date(stock.getTime().getTimeInMillis()));
 	}
 
