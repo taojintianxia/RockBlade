@@ -200,10 +200,8 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		stock.setSell5Price(Double.parseDouble(dataList.get(29)));
 		try {
 			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-			cal.setTime(dateFormat.parse(dataList.get(30)));
-			cal.setTime(timeFormat.parse(dataList.get(31)));
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			cal.setTime(formatter.parse(dataList.get(30) + " " + dataList.get(31)));
 			stock.setTime(cal);
 		} catch (ParseException e) {
 			System.out.println(e);
@@ -227,48 +225,51 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 		httpclient.start();
 		try {
-			final HttpGet[] requests = AllStocksRequests;
-			final CountDownLatch latch = new CountDownLatch(requests.length);
-			for (final HttpGet request : requests) {
-				httpclient.execute(request, new FutureCallback<HttpResponse>() {
+			while (StockUtil.isInTradingTime()) {
+				Thread.sleep(3000);
+				final HttpGet[] requests = AllStocksRequests;
+				final CountDownLatch latch = new CountDownLatch(requests.length);
+				for (final HttpGet request : requests) {
+					httpclient.execute(request, new FutureCallback<HttpResponse>() {
 
-					public void completed(final HttpResponse response) {
-						latch.countDown();
-						try {
-							String stockStrData = EntityUtils.toString(response.getEntity());
-							System.out.println(stockStrData);
-							Stock stock = parseOnlineStrDataToStock(stockStrData);
-							// first time get the stock info
-							if (ALL_STOCKS_CACHE.get(stock.getStockId()) == null) {
-								ArrayList<Stock> singleStockList = new ArrayList<>(1);
-								singleStockList.add(stock);
-								ALL_STOCKS_CACHE.put(stock.getStockId(), singleStockList);
-							} else {
-								int stockAmount = ALL_STOCKS_CACHE.get(stock.getStockId()).size();
-								Stock lastStock = ALL_STOCKS_CACHE.get(stock.getStockId()).get(stockAmount - 1);
-								if (lastStock.getCurrentPrice() != stock.getCurrentPrice()) {
-									ALL_STOCKS_CACHE.get(stock.getStockId()).add(stock);
+						public void completed(final HttpResponse response) {
+							latch.countDown();
+							try {
+								String stockStrData = EntityUtils.toString(response.getEntity());
+								System.out.println(stockStrData);
+								Stock stock = parseOnlineStrDataToStock(stockStrData);
+								// first time get the stock info
+								if (ALL_STOCKS_CACHE.get(stock.getStockId()) == null) {
+									ArrayList<Stock> singleStockList = new ArrayList<>(1);
+									singleStockList.add(stock);
+									ALL_STOCKS_CACHE.put(stock.getStockId(), singleStockList);
+								} else {
+									int stockAmount = ALL_STOCKS_CACHE.get(stock.getStockId()).size();
+									Stock lastStock = ALL_STOCKS_CACHE.get(stock.getStockId()).get(stockAmount - 1);
+									if (lastStock.getCurrentPrice() != stock.getCurrentPrice() && lastStock.getTime().before(stock.getTime())) {
+										ALL_STOCKS_CACHE.get(stock.getStockId()).add(stock);
+									}
 								}
+							} catch (IOException e) {
+								e.printStackTrace();
 							}
-						} catch (IOException e) {
-							e.printStackTrace();
 						}
-					}
 
-					public void failed(final Exception ex) {
-						latch.countDown();
-						System.out.println(request.getRequestLine() + "->" + ex);
-					}
+						public void failed(final Exception ex) {
+							latch.countDown();
+							System.out.println(request.getRequestLine() + "->" + ex);
+						}
 
-					public void cancelled() {
-						latch.countDown();
-						System.out.println(request.getRequestLine() + " cancelled");
-					}
+						public void cancelled() {
+							latch.countDown();
+							System.out.println(request.getRequestLine() + " cancelled");
+						}
 
-				});
+					});
+				}
+				latch.await();
+				System.out.println("Shutting down");
 			}
-			latch.await();
-			System.out.println("Shutting down");
 		} finally {
 			httpclient.close();
 		}

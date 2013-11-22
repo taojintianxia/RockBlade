@@ -31,6 +31,8 @@ public class StockUtil {
 
 	public final static String ENCODING_GBK = "GBK";
 	public final static String ENCODING_UTF = "UTF-8";
+	
+	public final static int MINUTE = 1000*60;
 
 	static final Calendar FORENOON_START = Calendar.getInstance();
 	static final Calendar FORENOON_END = Calendar.getInstance();

@@ -5,15 +5,16 @@ import static com.rockblade.cache.StockCache.persistenceIndexer;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.rockblade.cache.StockCache;
 import com.rockblade.helper.StockIdReader;
 import com.rockblade.model.Stock;
 import com.rockblade.parsecenter.impl.SinaOnlineAPIParser;
 import com.rockblade.persistence.JDBCManager;
 import com.rockblade.persistence.StockPersistence;
+import com.rockblade.util.StockUtil;
 
 /**
  * 
@@ -54,10 +55,16 @@ public class CacheToDBPersistence implements StockPersistence {
 			} else {
 				for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
 					Integer[] tempIndex = new Integer[2];
-					tempIndex[0] = persistenceIndexer.get(entry.getKey())[1];
-					tempIndex[1] = entry.getValue().size() - 1;
-					if (tempIndex[0] < tempIndex[1]) {
-						tempIndex[0] += 1;
+					if (persistenceIndexer.get(entry.getKey()) != null) {
+						tempIndex[0] = persistenceIndexer.get(entry.getKey())[1];
+						tempIndex[1] = entry.getValue().size() - 1;
+						if (tempIndex[0] < tempIndex[1]) {
+							tempIndex[0] += 1;
+						}
+					} else {
+						tempIndex[0] = 0;
+						tempIndex[1] = 0;
+						persistenceIndexer.put(entry.getKey(), tempIndex);
 					}
 				}
 			}
@@ -72,29 +79,35 @@ public class CacheToDBPersistence implements StockPersistence {
 	public static void main(String... args) {
 		StockIdReader stockReader = new StockIdReader();
 		stockReader.readStockIdFromFile();
-		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
+		final SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
+		final CacheToDBPersistence cacheToDB = new CacheToDBPersistence();
 
-		try {
-			Date targetDate = new Date();
-			targetDate.setTime(System.currentTimeMillis() + 10 * 60 * 1000);
-			while (new Date().before(targetDate)) {
-				parser.updateAllStocksCache();
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(15 * 60 * 1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						new CacheToDBPersistence().saveStock(ALL_STOCKS_CACHE);
-					}
-
-				}).start();
+		// update cache
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					parser.updateAllStocksCache();
+				} catch (InterruptedException | IOException e) {
+					e.printStackTrace();
+				}
 			}
-		} catch (InterruptedException | IOException e) {
-			e.printStackTrace();
-		}
-	}
 
+		}).start();
+
+		// flush cache to DB
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (StockUtil.isInTradingTime()) {
+					try {
+						Thread.sleep(5 * StockUtil.MINUTE);
+						cacheToDB.saveStock(StockCache.ALL_STOCKS_CACHE);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
 }
