@@ -1,5 +1,7 @@
 package com.rockblade.persistence;
 
+import static com.rockblade.cache.StockCache.ALL_STOCK_SAVED_MARKER;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -38,12 +40,9 @@ public class JDBCManager {
 				List<Stock> stockList = entry.getValue();
 				int start = stockMapIndexer.get(entry.getKey())[0];
 				int end = stockMapIndexer.get(entry.getKey())[0];
+				boolean isSavedBefore = ALL_STOCK_SAVED_MARKER.get(entry.getKey());
 
-				if (start == end && stockList.size() > 0) {
-					continue;
-				}
-
-				if (stockList.size() > 1 && !stockList.get(end - 1).getTime().before(stockList.get(end).getTime())) {
+				if (start == end && !isSavedBefore) {
 					continue;
 				}
 
@@ -52,6 +51,8 @@ public class JDBCManager {
 					transferStockToPreparedStatment(stockList.get(i), stmt);
 					stmt.execute();
 				}
+
+				ALL_STOCK_SAVED_MARKER.put(entry.getKey(), true);
 
 			}
 		}
