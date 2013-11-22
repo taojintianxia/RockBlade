@@ -55,10 +55,16 @@ public class CacheToDBPersistence implements StockPersistence {
 			} else {
 				for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
 					Integer[] tempIndex = new Integer[2];
-					tempIndex[0] = persistenceIndexer.get(entry.getKey())[1];
-					tempIndex[1] = entry.getValue().size() - 1;
-					if (tempIndex[0] < tempIndex[1]) {
-						tempIndex[0] += 1;
+					if (persistenceIndexer.get(entry.getKey()) != null) {
+						tempIndex[0] = persistenceIndexer.get(entry.getKey())[1];
+						tempIndex[1] = entry.getValue().size() - 1;
+						if (tempIndex[0] < tempIndex[1]) {
+							tempIndex[0] += 1;
+						}
+					} else {
+						tempIndex[0] = 0;
+						tempIndex[1] = 0;
+						persistenceIndexer.put(entry.getKey(), tempIndex);
 					}
 				}
 			}
@@ -80,12 +86,10 @@ public class CacheToDBPersistence implements StockPersistence {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (StockUtil.isInTradingTime()) {
-					try {
-						parser.updateAllStocksCache();
-					} catch (InterruptedException | IOException e) {
-						e.printStackTrace();
-					}
+				try {
+					parser.updateAllStocksCache();
+				} catch (InterruptedException | IOException e) {
+					e.printStackTrace();
 				}
 			}
 

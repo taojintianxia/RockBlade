@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.rockblade.model.Stock;
 
@@ -26,7 +27,7 @@ public class StockCache {
 	// map stores the index of every stock.
 	public static Map<String, Integer[]> persistenceIndexer = new HashMap<>();
 
-	public static final Map<String, List<Stock>> ALL_STOCKS_CACHE = new HashMap<>();
+	public static final Map<String, List<Stock>> ALL_STOCKS_CACHE = new ConcurrentHashMap<>();
 
 	public static final List<String> ALL_STOCK_ID = new ArrayList<>();
 	private static Map<String, Stock> currentSHStockMap = new LinkedHashMap<>();

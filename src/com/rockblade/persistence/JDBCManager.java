@@ -1,11 +1,10 @@
 package com.rockblade.persistence;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -35,16 +34,25 @@ public class JDBCManager {
 
 	public void saveStock(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer) throws SQLException {
 		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
-			List<Stock> stockList = entry.getValue();
-			int start = stockMapIndexer.get(entry.getKey())[0];
-			int end = stockMapIndexer.get(entry.getKey())[0];
-			if (start == end && end != 0) {
-				continue;
-			}
-			for (int i = start; i <= end; i++) {
-				PreparedStatement stmt = conn.prepareStatement(INSERT_SQL);
-				transferStockToPreparedStatment(stockList.get(i), stmt);
-				stmt.execute();
+			if (stockMapIndexer.get(entry.getKey()) != null) {
+				List<Stock> stockList = entry.getValue();
+				int start = stockMapIndexer.get(entry.getKey())[0];
+				int end = stockMapIndexer.get(entry.getKey())[0];
+
+				if (start == end && stockList.size() > 0) {
+					continue;
+				}
+
+				if (stockList.size() > 1 && !stockList.get(end - 1).getTime().before(stockList.get(end).getTime())) {
+					continue;
+				}
+
+				for (int i = start; i <= end; i++) {
+					PreparedStatement stmt = conn.prepareStatement(INSERT_SQL);
+					transferStockToPreparedStatment(stockList.get(i), stmt);
+					stmt.execute();
+				}
+
 			}
 		}
 
@@ -53,8 +61,7 @@ public class JDBCManager {
 	private void transferStockToPreparedStatment(Stock stock, PreparedStatement stmt) throws SQLException {
 		stmt.setString(1, stock.getStockId());
 		stmt.setDouble(2, stock.getAmount());
-		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getTime().getTime()));
-		stmt.setDate(3, new Date(stock.getTime().getTimeInMillis()));
+		stmt.setTimestamp(3, new Timestamp(stock.getTime().getTimeInMillis()));
 	}
 
 }
