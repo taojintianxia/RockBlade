@@ -27,7 +27,7 @@ public class StockCache {
 
 	public static final Map<String, List<Stock>> ALL_STOCKS_CACHE = new ConcurrentHashMap<>();
 
-	public static final Map<String, Boolean> ALL_STOCK_SAVED_MARKER = new ConcurrentHashMap<>();
+	public static final Map<String, Boolean> ALL_STOCK_NEED_SAVED_MARKER = new ConcurrentHashMap<>();
 
 	public static final List<String> ALL_STOCK_ID = new ArrayList<>();
 

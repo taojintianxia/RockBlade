@@ -1,6 +1,7 @@
 package com.rockblade.persistence.impl;
 
 import static com.rockblade.cache.StockCache.ALL_STOCKS_CACHE;
+import static com.rockblade.cache.StockCache.ALL_STOCK_NEED_SAVED_MARKER;
 import static com.rockblade.cache.StockCache.persistenceIndexer;
 
 import java.io.IOException;
@@ -48,9 +49,15 @@ public class CacheToDBPersistence implements StockPersistence {
 			if (persistenceIndexer.isEmpty()) {
 				for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
 					Integer[] tempIndex = new Integer[2];
+					int entrySize = entry.getValue().size();
 					tempIndex[0] = 0;
-					tempIndex[1] = entry.getValue().size() - 1;
+					if (entrySize < 2) {
+						tempIndex[1] = 0;
+					} else {
+						tempIndex[1] = entry.getValue().size() - 1;
+					}
 					persistenceIndexer.put(entry.getKey(), tempIndex);
+					ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), true);
 				}
 			} else {
 				for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
@@ -60,12 +67,16 @@ public class CacheToDBPersistence implements StockPersistence {
 						tempIndex[1] = entry.getValue().size() - 1;
 						if (tempIndex[0] < tempIndex[1]) {
 							tempIndex[0] += 1;
+							ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), true);
+						} else {
+							ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), false);
 						}
 					} else {
 						tempIndex[0] = 0;
 						tempIndex[1] = 0;
-						persistenceIndexer.put(entry.getKey(), tempIndex);
+						ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), false);
 					}
+					persistenceIndexer.put(entry.getKey(), tempIndex);
 				}
 			}
 
