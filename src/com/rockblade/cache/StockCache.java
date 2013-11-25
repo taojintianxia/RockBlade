@@ -1,9 +1,7 @@
 package com.rockblade.cache;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,51 +30,6 @@ public class StockCache {
 	public static final Map<String, Boolean> ALL_STOCK_SAVED_MARKER = new ConcurrentHashMap<>();
 
 	public static final List<String> ALL_STOCK_ID = new ArrayList<>();
-	private static Map<String, Stock> currentSHStockMap = new LinkedHashMap<>();
-	private static Map<String, Map<Date, Stock>> SHStockMap = new LinkedHashMap<>();
-	private static Map<String, Map<Date, Stock>> SZStockMap = new LinkedHashMap<>();
-	private static Map<String, Double> SHStockIndexDifferenceMap = new LinkedHashMap<>();
-	private static Map<String, Double> SZStockIndexDifferenceMap = new LinkedHashMap<>();
-
-	public static Map<String, Map<Date, Stock>> getSHStockMap() {
-		return SHStockMap;
-	}
-
-	public static void setSHStockMap(Map<String, Map<Date, Stock>> sHStockMap) {
-		SHStockMap = sHStockMap;
-	}
-
-	public static Map<String, Map<Date, Stock>> getSZStockMap() {
-		return SZStockMap;
-	}
-
-	public static void setSZStockMap(Map<String, Map<Date, Stock>> sZStockMap) {
-		SZStockMap = sZStockMap;
-	}
-
-	public static Map<String, Stock> getCurrentSHStockMap() {
-		return currentSHStockMap;
-	}
-
-	public static void setCurrentSHStockMap(Map<String, Stock> currentSHStockMap) {
-		StockCache.currentSHStockMap = currentSHStockMap;
-	}
-
-	public static Map<String, Double> getSHStockIndexDifferenceMap() {
-		return SHStockIndexDifferenceMap;
-	}
-
-	public static void setSHStockIndexDifferenceMap(Map<String, Double> sHStockIndexDifferenceMap) {
-		SHStockIndexDifferenceMap = sHStockIndexDifferenceMap;
-	}
-
-	public static Map<String, Double> getSZStockIndexDifferenceMap() {
-		return SZStockIndexDifferenceMap;
-	}
-
-	public static void setSZStockIndexDifferenceMap(Map<String, Double> sZStockIndexDifferenceMap) {
-		SZStockIndexDifferenceMap = sZStockIndexDifferenceMap;
-	}
 
 	public static void cleanCache() {
 		persistenceIndexer.clear();
