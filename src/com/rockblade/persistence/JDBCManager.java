@@ -39,11 +39,10 @@ public class JDBCManager {
 			if (stockMapIndexer.get(entry.getKey()) != null) {
 				List<Stock> stockList = entry.getValue();
 				int start = stockMapIndexer.get(entry.getKey())[0];
-				int end = stockMapIndexer.get(entry.getKey())[0];
-				Boolean shouldNotBeSaved = ALL_STOCK_NEED_SAVED_MARKER.get(entry.getKey());
-				shouldNotBeSaved = shouldNotBeSaved == null ? false : shouldNotBeSaved;
-
-				if (!shouldNotBeSaved) {
+				int end = stockMapIndexer.get(entry.getKey())[1];
+				Boolean needToBeSaved = ALL_STOCK_NEED_SAVED_MARKER.get(entry.getKey());
+				needToBeSaved = needToBeSaved == null ? false : needToBeSaved;
+				if (!needToBeSaved) {
 					continue;
 				}
 
@@ -52,7 +51,9 @@ public class JDBCManager {
 					transferStockToPreparedStatment(stockList.get(i), stmt);
 					stmt.execute();
 				}
-
+				Integer[] tempIndexer = new Integer[2];
+				tempIndexer[0] = tempIndexer[1] = end;
+				stockMapIndexer.put(entry.getKey(), tempIndexer);
 			}
 		}
 

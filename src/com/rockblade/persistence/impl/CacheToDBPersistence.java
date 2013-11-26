@@ -62,21 +62,22 @@ public class CacheToDBPersistence implements StockPersistence {
 			} else {
 				for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
 					Integer[] tempIndex = new Integer[2];
-					if (persistenceIndexer.get(entry.getKey()) != null) {
-						tempIndex[0] = persistenceIndexer.get(entry.getKey())[1];
+					String stockId = entry.getKey();
+					if (persistenceIndexer.get(stockId) != null) {
+						tempIndex[0] = persistenceIndexer.get(stockId)[1];
 						tempIndex[1] = entry.getValue().size() - 1;
 						if (tempIndex[0] < tempIndex[1]) {
 							tempIndex[0] += 1;
-							ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), true);
+							ALL_STOCK_NEED_SAVED_MARKER.put(stockId, true);
 						} else {
-							ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), false);
+							ALL_STOCK_NEED_SAVED_MARKER.put(stockId, false);
 						}
 					} else {
 						tempIndex[0] = 0;
-						tempIndex[1] = 0;
-						ALL_STOCK_NEED_SAVED_MARKER.put(entry.getKey(), false);
+						tempIndex[1] = entry.getValue().size() - 1;
+						ALL_STOCK_NEED_SAVED_MARKER.put(stockId, true);
 					}
-					persistenceIndexer.put(entry.getKey(), tempIndex);
+					persistenceIndexer.put(stockId, tempIndex);
 				}
 			}
 

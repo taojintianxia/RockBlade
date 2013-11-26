@@ -238,7 +238,7 @@ public class StockUtil {
 			result = true;
 		}
 
-		return result;
+		return true;
 	}
 
 	private static void initCalendar(Calendar cal, int date, int minute, int second) {

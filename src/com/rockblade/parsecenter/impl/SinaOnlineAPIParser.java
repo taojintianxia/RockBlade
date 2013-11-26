@@ -167,7 +167,8 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		List<String> dataList = Arrays.asList(usefulData.split(","));
 
 		if (dataList.size() < 3) {
-			stock.setSuspension(true);
+			stock = null;
+			ALL_STOCK_ID.remove(stockId);
 			return stock;
 		}
 
@@ -211,10 +212,17 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 		if (stock.getOpen() == 0) {
 			stock.setSuspension(true);
 		}
-		DecimalFormat decimalFormat = new DecimalFormat(".##");
-		Double percent = Double.parseDouble(decimalFormat.format((stock.getPrice() - stock.getClose()) / stock.getClose() * 100));
-		stock.setPercent(percent);
-		stock.setSuspension(false);
+
+		if (stock.getOpen() != 0) {
+			DecimalFormat decimalFormat = new DecimalFormat(".##");
+			Double percent = Double.parseDouble(decimalFormat.format((stock.getPrice() - stock.getClose()) / stock.getClose() * 100));
+			stock.setPercent(percent);
+			stock.setSuspension(false);
+		} else {
+			stock.setPercent(0);
+			stock.setSuspension(true);
+		}
+
 		return stock;
 
 	}
@@ -242,9 +250,13 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 							latch.countDown();
 							try {
 								String stockStrData = EntityUtils.toString(response.getEntity());
-								System.out.println(stockStrData);
+								// System.out.println(stockStrData);
 								Stock stock = parseOnlineStrDataToStock(stockStrData);
-								System.out.println("current price is : " + stock.getPrice());
+								// System.out.println("current price is : "
+								// +stock.getPrice());
+								if (stock == null) {
+									return;
+								}
 								// first time get the stock info
 								if (ALL_STOCKS_CACHE.get(stock.getStockId()) == null) {
 									ArrayList<Stock> singleStockList = new ArrayList<>(1);

@@ -40,6 +40,10 @@ public class OnlineAPIParserImpl {
 	final static Logger logger = LoggerFactory.getLogger(OnlineAPIParserImpl.class);
 
 	private List<String> stockStrDataList;
+	
+	public void filterUnavailableStock(){
+		
+	}
 
 	public String retriveURLStrDataByStockId(final String stockId) {
 		String data = "";
@@ -122,7 +126,7 @@ public class OnlineAPIParserImpl {
 		return stockList;
 	}
 
-	public Stock parseURLDataForStockAllInfo(String data) throws ParseException {
+	private Stock parseURLDataForStockAllInfo(String data) throws ParseException {
 		Stock stock = new Stock();
 		String stockId = new String(data.substring(13, data.indexOf("=")));
 		stock.setStockId(stockId);
