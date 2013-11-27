@@ -340,5 +340,10 @@ public class Stock {
         return "Stock Name : " + getStockName() + " , Current Price : " + getPrice() + " , Transaction Volume : " + decimalFormat.format(getTransactionVolume() / 100) + "Hand , Amount : "
                 + decimalFormat.format(getAmount() / 10000) + "W" + " Yesterday Close " + getClose() + " Today Open " + getOpen() + "\n";
     }
+    
+    @Override
+    public Stock clone() throws CloneNotSupportedException{
+    	return (Stock)super.clone();
+    }
 
 }

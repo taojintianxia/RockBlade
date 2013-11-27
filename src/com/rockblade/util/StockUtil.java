@@ -31,19 +31,22 @@ public class StockUtil {
 
 	public final static String ENCODING_GBK = "GBK";
 	public final static String ENCODING_UTF = "UTF-8";
-	
-	public final static int MINUTE = 1000*60;
+
+	public final static int MINUTE = 1000 * 60;
 
 	static final Calendar FORENOON_START = Calendar.getInstance();
 	static final Calendar FORENOON_END = Calendar.getInstance();
 	static final Calendar AFTERNOON_START = Calendar.getInstance();
 	static final Calendar AFTERNOON_END = Calendar.getInstance();
 
+	private static final Stock stock = new Stock();
+
 	static {
 		initCalendar(FORENOON_START, 9, 30, 0);
 		initCalendar(FORENOON_END, 11, 30, 0);
 		initCalendar(AFTERNOON_START, 13, 0, 0);
 		initCalendar(AFTERNOON_END, 15, 0, 0);
+		initClonableStock();
 	}
 
 	public static enum StockProperties {
@@ -238,12 +241,57 @@ public class StockUtil {
 			result = true;
 		}
 
-		return true;
+		return result;
 	}
 
 	private static void initCalendar(Calendar cal, int date, int minute, int second) {
 		cal.set(Calendar.HOUR_OF_DAY, date);
 		cal.set(Calendar.MINUTE, minute);
 		cal.set(Calendar.SECOND, second);
+	}
+
+	public static Stock getInitializedBlankStock() {
+		Stock clonedStock = null;
+		try {
+			clonedStock = stock.clone();
+			clonedStock.setTime(Calendar.getInstance());
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		return clonedStock;
+	}
+
+	private static void initClonableStock() {
+		stock.setAmount(0);
+		stock.setAsk1Price(0);
+		stock.setAsk1Volume(0);
+		stock.setAsk2Price(0);
+		stock.setAsk2Volume(0);
+		stock.setAsk3Price(0);
+		stock.setAsk3Volume(0);
+		stock.setAsk4Price(0);
+		stock.setAsk4Volume(0);
+		stock.setAsk5Price(0);
+		stock.setAsk5Volume(0);
+		stock.setBid1Price(0);
+		stock.setBid1Volume(0);
+		stock.setBid2Price(0);
+		stock.setBid2Volume(0);
+		stock.setBid3Price(0);
+		stock.setBid4Price(0);
+		stock.setBid4Volume(0);
+		stock.setBid5Price(0);
+		stock.setBid5Volume(0);
+		stock.setClose(0);
+		stock.setHigh(0);
+		stock.setLow(0);
+		stock.setOpen(0);
+		stock.setPercent(0);
+		stock.setPrice(0);
+		stock.setStockName("");
+		stock.setSuspension(true);
+		stock.setTransactionVolume(0);
+		stock.setTime(Calendar.getInstance());
 	}
 }

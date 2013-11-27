@@ -1,10 +1,8 @@
 package com.rockblade.persistence.impl;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.rockblade.cache.StockCache;
-import com.rockblade.helper.StockIdReader;
 import com.rockblade.parsecenter.impl.SinaOnlineAPIParser;
 import com.rockblade.util.StockUtil;
 
@@ -19,9 +17,9 @@ import com.rockblade.util.StockUtil;
 public class Test {
 
 	public static void main(String... args) throws Exception {
-		StockIdReader stockReader = new StockIdReader();
-		stockReader.readStockIdFromFile();
-		// StockCache.ALL_STOCK_ID.add("002024");
+		// StockIdReader stockReader = new StockIdReader();
+		// stockReader.readStockIdFromFile();
+		StockCache.ALL_STOCK_ID.add("002024");
 		// StockCache.ALL_STOCK_ID.add("600598");
 		// StockCache.ALL_STOCK_ID.add("600575");
 		final SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
@@ -67,7 +65,7 @@ public class Test {
 			public void run() {
 				try {
 					while (StockUtil.isInTradingTime()) {
-						Thread.sleep(5000);
+						Thread.sleep(50000);
 						cacheToDB.saveStock(StockCache.ALL_STOCKS_CACHE);
 					}
 				} catch (InterruptedException e) {

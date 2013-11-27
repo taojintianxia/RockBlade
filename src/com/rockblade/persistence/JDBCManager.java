@@ -1,7 +1,5 @@
 package com.rockblade.persistence;
 
-import static com.rockblade.cache.StockCache.ALL_STOCK_NEED_SAVED_MARKER;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,7 +21,8 @@ import com.rockblade.model.Stock;
 public class JDBCManager {
 
 	private static Connection conn;
-	private final String INSERT_SQL = "insert into stockdetail values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private final String INSERT_STOCKDETAIL_SQL = "insert into stockdetail values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private final String INSERT_DAILYSTOCK_SQL = "insert into dailystock values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	static {
 		try {
@@ -34,29 +33,37 @@ public class JDBCManager {
 
 	}
 
-	public void saveStock(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer) throws SQLException {
+	public void saveStocks(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
 		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
 			if (stockMapIndexer.get(entry.getKey()) != null) {
 				List<Stock> stockList = entry.getValue();
 				int start = stockMapIndexer.get(entry.getKey())[0];
 				int end = stockMapIndexer.get(entry.getKey())[1];
-				Boolean needToBeSaved = ALL_STOCK_NEED_SAVED_MARKER.get(entry.getKey());
+				Boolean needToBeSaved = stockSaverMarker.get(entry.getKey());
 				needToBeSaved = needToBeSaved == null ? false : needToBeSaved;
 				if (!needToBeSaved) {
 					continue;
 				}
 
 				for (int i = start; i <= end; i++) {
-					PreparedStatement stmt = conn.prepareStatement(INSERT_SQL);
+					PreparedStatement stmt = conn.prepareStatement(INSERT_STOCKDETAIL_SQL);
 					transferStockToPreparedStatment(stockList.get(i), stmt);
 					stmt.execute();
 				}
+
 				Integer[] tempIndexer = new Integer[2];
 				tempIndexer[0] = tempIndexer[1] = end;
 				stockMapIndexer.put(entry.getKey(), tempIndexer);
 			}
 		}
+	}
 
+	public void saveStock(Map<String, Stock> stockMap) throws SQLException {
+		for (Map.Entry<String, Stock> entry : stockMap.entrySet()) {
+			PreparedStatement prepareStatement = conn.prepareStatement(INSERT_DAILYSTOCK_SQL);
+			transferStockToPreparedStatment(entry.getValue(), prepareStatement);
+			prepareStatement.execute();
+		}
 	}
 
 	private void transferStockToPreparedStatment(Stock stock, PreparedStatement stmt) throws SQLException {
