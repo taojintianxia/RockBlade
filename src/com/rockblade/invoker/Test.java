@@ -1,9 +1,10 @@
-package com.rockblade.persistence.impl;
+package com.rockblade.invoker;
 
 import java.io.IOException;
 
 import com.rockblade.cache.StockCache;
 import com.rockblade.parsecenter.impl.SinaOnlineAPIParser;
+import com.rockblade.persistence.impl.CacheToDBPersistence;
 import com.rockblade.util.StockUtil;
 
 /**
@@ -66,12 +67,14 @@ public class Test {
 				try {
 					while (StockUtil.isInTradingTime()) {
 						Thread.sleep(50000);
-						cacheToDB.saveStock(StockCache.ALL_STOCKS_CACHE);
+						cacheToDB.saveStocks(StockCache.ALL_STOCKS_CACHE);
+						if(StockUtil.isInMiddayNoneTradingTime(StockCache.persisFinishedTime)){
+							StockCache.cleanCache();
+						}
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-
 			}
 		}).start();
 	}

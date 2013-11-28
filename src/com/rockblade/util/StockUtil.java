@@ -243,6 +243,25 @@ public class StockUtil {
 
 		return result;
 	}
+	
+	public static boolean isInMiddayNoneTradingTime(){
+		boolean result = false;
+		Calendar now = Calendar.getInstance();
+		if (now.after(FORENOON_END) && now.before(AFTERNOON_START)) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	public static boolean isInMiddayNoneTradingTime(Calendar cal){
+		boolean result = false;
+		if (cal.after(FORENOON_END) && cal.before(AFTERNOON_START)) {
+			result = true;
+		}
+		
+		return result;
+	}
 
 	private static void initCalendar(Calendar cal, int date, int minute, int second) {
 		cal.set(Calendar.HOUR_OF_DAY, date);
@@ -253,6 +272,7 @@ public class StockUtil {
 	public static Stock getInitializedBlankStock() {
 		Stock clonedStock = null;
 		try {
+			initClonableStock();
 			clonedStock = stock.clone();
 			clonedStock.setTime(Calendar.getInstance());
 		} catch (CloneNotSupportedException e) {

@@ -21,6 +21,8 @@ public class StockCache {
 
     public final static int SH_STOCK_CACHE_NUM = 1000;
     public final static int ZH_STOCK_CACHE_NUM = 1500;
+    
+    public static Calendar persisFinishedTime = Calendar.getInstance();
 
     // since every fixed time , there will be some stock data stores to DB.this
     // map stores the index of every stock.

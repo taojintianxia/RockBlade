@@ -11,7 +11,7 @@ import java.util.Calendar;
  * 
  */
 
-public class Stock {
+public class Stock implements Cloneable {
 
     // 股票号码
     private String stockId;

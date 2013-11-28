@@ -23,13 +23,13 @@ import com.rockblade.util.StockUtil;
 public class Calculator {
 
 	public static void main(String... args) {
-		List<Stock> targetStockList = getTopNAmountInSHStock(10);
+		List<Stock> targetStockList = getTopNAmountStock(10);
 		for (Stock stock : targetStockList) {
 			System.out.println(stock.toString());
 		}
 	}
 
-	public static List<Stock> getTopNAmountInSHStock(int n) {
+	public static List<Stock> getTopNAmountStock(int n) {
 		ParserInvoker parserInvoker = new ParserInvoker();
 		parserInvoker.updateStocks();
 		Map<String, Stock> currentSHStockMap = StockCache.getCurrentSHStockMap();

@@ -1,14 +1,18 @@
-package com.rockblade.persistence;
+package com.rockblade.persistence.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.rockblade.cache.StockCache;
 import com.rockblade.model.Stock;
+import com.rockblade.persistence.StockPersistence;
 
 /**
  * 
@@ -18,7 +22,7 @@ import com.rockblade.model.Stock;
  * 
  */
 
-public class JDBCManager {
+public class StockPersistenceImpl {
 
 	private static Connection conn;
 	private final String INSERT_STOCKDETAIL_SQL = "insert into stockdetail values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -56,6 +60,8 @@ public class JDBCManager {
 				stockMapIndexer.put(entry.getKey(), tempIndexer);
 			}
 		}
+		
+		StockCache.persisFinishedTime.setTime(new Date());
 	}
 
 	public void saveStock(Map<String, Stock> stockMap) throws SQLException {
@@ -99,5 +105,4 @@ public class JDBCManager {
 		stmt.setDouble(30, stock.getBid5Price());
 		stmt.setTimestamp(31, new Timestamp(stock.getTime().getTimeInMillis()));
 	}
-
 }

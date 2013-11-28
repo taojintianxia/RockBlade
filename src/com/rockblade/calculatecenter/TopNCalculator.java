@@ -1,6 +1,7 @@
 package com.rockblade.calculatecenter;
 
-import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import com.rockblade.model.Stock;
 
@@ -13,7 +14,7 @@ import com.rockblade.model.Stock;
  */
 
 public interface TopNCalculator {
-
-	public LinkedList<Stock> getTopAmountStocks(int n);
+	
+	public abstract List<Stock> getTopStocks(int n , Map<String , List<Stock>> stocksMap);
 
 }

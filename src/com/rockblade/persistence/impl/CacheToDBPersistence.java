@@ -5,11 +5,11 @@ import static com.rockblade.cache.StockCache.ALL_STOCK_NEED_SAVED_MARKER;
 import static com.rockblade.cache.StockCache.persistenceIndexer;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import com.rockblade.model.Stock;
-import com.rockblade.persistence.JDBCManager;
 import com.rockblade.persistence.StockPersistence;
 
 /**
@@ -22,11 +22,11 @@ import com.rockblade.persistence.StockPersistence;
 
 public class CacheToDBPersistence implements StockPersistence {
 
-	private static JDBCManager jdbcManager;
+	private static StockPersistenceImpl jdbcManager;
 
 	@Override
-	public void saveStock(Map<String, List<Stock>> stockList) {
-		jdbcManager = new JDBCManager();
+	public void saveStocks(Map<String, List<Stock>> stockList) {
+		jdbcManager = new StockPersistenceImpl();
 		updateCacheIndexer(stockList);
 
 		try {
@@ -81,5 +81,10 @@ public class CacheToDBPersistence implements StockPersistence {
 			// data from source.
 			// check if it's in rest time
 		}
+	}
+
+	@Override
+	public Map<String, Stock> getStockInSpecificDate(Calendar cal) {
+		return null;
 	}
 }
