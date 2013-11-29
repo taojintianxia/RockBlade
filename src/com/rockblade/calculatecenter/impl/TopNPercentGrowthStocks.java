@@ -23,10 +23,6 @@ import com.rockblade.util.StockUtil;
 
 public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 
-	public TopNPercentGrowthStocks(int n) {
-		super(n);
-	}
-
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
 		Map<String, Double> stockPercentDiffMap = new LinkedHashMap<>();
@@ -80,6 +76,7 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 					continue;
 				} else {
 					swapEntryList(stockEntryList, entry);
+					lastTopNStockPercent = stockEntryList.get(stockEntryList.size()-1).getValue();
 				}
 			}
 		}
@@ -104,7 +101,7 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 			}
 		}
 
-		for (int i = size - 1; i < index; i--) {
+		for (int i = size - 1; i > index; i--) {
 			topNEntry.set(i, topNEntry.get(i - 1));
 		}
 
@@ -112,7 +109,7 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 	}
 
 	public static void main(String... args) {
-		TopNPercentGrowthStocks calculator = new TopNPercentGrowthStocks(3);
+		TopNPercentGrowthStocks calculator = new TopNPercentGrowthStocks();
 		Map<String, List<Stock>> testMap = new HashMap<>();
 		Random random = new Random();
 		for (int i = 0; i < 10; i++) {
