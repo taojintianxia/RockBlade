@@ -22,15 +22,15 @@ public abstract class AbstractTopNCalculator implements TopNCalculator {
 	@Override
 	public abstract List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap);
 
-	protected List<String> sortAndGetTopNByMapValueInSequence(int n, Map<String, Double> targetMap, Comparator<Double> comparator) {
-		return sortAndGetTopNByMapValue(n, targetMap, comparator, true);
+	protected List<String> getTopNByMapValueInSequence(int n, Map<String, Double> targetMap) {
+		return sortAndGetTopNByMapValue(n, targetMap, true);
 	}
 
-	protected List<String> sortAndGetTopNByMapValueInRevertedSequence(int n, Map<String, Double> targetMap, Comparator<Double> comparator) {
-		return sortAndGetTopNByMapValue(n, targetMap, comparator, false);
+	protected List<String> getTopNByMapValueInRevertedSequence(int n, Map<String, Double> targetMap) {
+		return sortAndGetTopNByMapValue(n, targetMap, false);
 	}
 
-	private List<String> sortAndGetTopNByMapValue(int n, Map<String, Double> targetMap, Comparator<Double> comparator, final boolean isInSequence) {
+	private List<String> sortAndGetTopNByMapValue(int n, Map<String, Double> targetMap, final boolean isInSequence) {
 
 		List<Map.Entry<String, Double>> stockEntryList = new ArrayList<>(n);
 		List<String> resultList = new ArrayList<>(n);

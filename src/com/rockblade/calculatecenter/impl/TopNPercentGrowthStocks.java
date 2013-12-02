@@ -26,6 +26,8 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
 		Map<String, Double> stockPercentDiffMap = new LinkedHashMap<>();
+		List<String> topStockIdsList = new ArrayList<>(n);
+		List<Stock> topStocksList = new ArrayList<>(n);
 		for (Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stockList = entry.getValue();
@@ -38,74 +40,16 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 			}
 		}
 
-		return getTopNStocks(n, stockPercentDiffMap, stocksMap);
-	}
-
-	protected List<Stock> getTopNStocks(int n, Map<String, Double> stockDiffMap, Map<String, List<Stock>> stocksMap) {
-		List<Map.Entry<String, Double>> stockEntryList = new ArrayList<>(n);
-		List<Stock> resultList = new ArrayList<>(n);
-		int stockSize = stockDiffMap.size();
-		int counter = 0;
-		Double lastTopNStockPercent = 0.0;
-		boolean isSorted = false;
-		if (n >= stockSize) {
-			throw new IllegalArgumentException("N is more than stocks size !");
+		topStockIdsList = getTopNByMapValueInRevertedSequence(n, stockPercentDiffMap);
+		if (topStockIdsList.size() != n) {
+			System.err.println("What the hell ?!");
+		}
+		for (int i = 0; i < n; i++) {
+			int size = stocksMap.get(topStockIdsList.get(i)).size();
+			topStocksList.add(stocksMap.get(topStockIdsList.get(i)).get(size - 1));
 		}
 
-		for (Map.Entry<String, Double> entry : stockDiffMap.entrySet()) {
-			if (counter < n) {
-				stockEntryList.add(entry);
-				counter++;
-			} else {
-				if (!isSorted) {
-					Collections.sort(stockEntryList, new Comparator<Map.Entry<String, Double>>() {
-						@Override
-						public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b) {
-							if (a.getValue() > b.getValue())
-								return -1;
-							else if (a.getValue() < b.getValue())
-								return 1;
-							else
-								return 0;
-						}
-					});
-					isSorted = true;
-					lastTopNStockPercent = stockEntryList.get(n - 1).getValue();
-				}
-				if (lastTopNStockPercent > entry.getValue()) {
-					continue;
-				} else {
-					swapEntryList(stockEntryList, entry);
-					lastTopNStockPercent = stockEntryList.get(stockEntryList.size()-1).getValue();
-				}
-			}
-		}
-
-		for (Map.Entry<String, Double> entry : stockEntryList) {
-			List<Stock> tmpStocksList = stocksMap.get(entry.getKey());
-			resultList.add(tmpStocksList.get(tmpStocksList.size() - 1));
-		}
-
-		return resultList;
-	}
-
-	private void swapEntryList(List<Map.Entry<String, Double>> topNEntry, Map.Entry<String, Double> newEntry) {
-
-		int size = topNEntry.size();
-		int index = size - 1;
-		for (int i = size - 2; i >= 0; i--) {
-			if (topNEntry.get(i).getValue() < newEntry.getValue()) {
-				index = i;
-			} else {
-				break;
-			}
-		}
-
-		for (int i = size - 1; i > index; i--) {
-			topNEntry.set(i, topNEntry.get(i - 1));
-		}
-
-		topNEntry.set(index, newEntry);
+		return topStocksList;
 	}
 
 	public static void main(String... args) {
