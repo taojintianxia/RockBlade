@@ -32,12 +32,12 @@ public class StockUtil {
 	public final static String ENCODING_GBK = "GBK";
 	public final static String ENCODING_UTF = "UTF-8";
 
-	public final static int MINUTE = 1000 * 60;
+	public final static long MINUTE = 1000 * 60;
 
-	static final Calendar FORENOON_START = Calendar.getInstance();
-	static final Calendar FORENOON_END = Calendar.getInstance();
-	static final Calendar AFTERNOON_START = Calendar.getInstance();
-	static final Calendar AFTERNOON_END = Calendar.getInstance();
+	public static final Calendar FORENOON_START = Calendar.getInstance();
+	public static final Calendar FORENOON_END = Calendar.getInstance();
+	public static final Calendar AFTERNOON_START = Calendar.getInstance();
+	public static final Calendar AFTERNOON_END = Calendar.getInstance();
 
 	private static final Stock stock = new Stock();
 
@@ -243,23 +243,23 @@ public class StockUtil {
 
 		return result;
 	}
-	
-	public static boolean isInMiddayNoneTradingTime(){
+
+	public static boolean isInMiddayNoneTradingTime() {
 		boolean result = false;
 		Calendar now = Calendar.getInstance();
 		if (now.after(FORENOON_END) && now.before(AFTERNOON_START)) {
 			result = true;
 		}
-		
+
 		return result;
 	}
-	
-	public static boolean isInMiddayNoneTradingTime(Calendar cal){
+
+	public static boolean isInMiddayNoneTradingTime(Calendar cal) {
 		boolean result = false;
 		if (cal.after(FORENOON_END) && cal.before(AFTERNOON_START)) {
 			result = true;
 		}
-		
+
 		return result;
 	}
 

@@ -239,55 +239,64 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 		httpclient.start();
 		try {
-			while (StockUtil.isInTradingTime()) {
-				Thread.sleep(3000);
-				final HttpGet[] requests = AllStocksRequests;
-				final CountDownLatch latch = new CountDownLatch(requests.length);
-				for (final HttpGet request : requests) {
-					httpclient.execute(request, new FutureCallback<HttpResponse>() {
+			while (true) {
+				if (StockUtil.isInTradingTime()) {
 
-						public void completed(final HttpResponse response) {
-							latch.countDown();
-							try {
-								String stockStrData = EntityUtils.toString(response.getEntity());
-								// System.out.println(stockStrData);
-								Stock stock = parseOnlineStrDataToStock(stockStrData);
-								// System.out.println("current price is : "
-								// +stock.getPrice());
-								if (stock == null) {
-									return;
-								}
-								// first time get the stock info
-								if (ALL_STOCKS_CACHE.get(stock.getStockId()) == null) {
-									ArrayList<Stock> singleStockList = new ArrayList<>(1);
-									singleStockList.add(stock);
-									ALL_STOCKS_CACHE.put(stock.getStockId(), singleStockList);
-								} else {
-									int stockAmount = ALL_STOCKS_CACHE.get(stock.getStockId()).size();
-									Stock lastStock = ALL_STOCKS_CACHE.get(stock.getStockId()).get(stockAmount - 1);
-									if (lastStock.getPrice() != stock.getPrice() && lastStock.getTime().before(stock.getTime())) {
-										ALL_STOCKS_CACHE.get(stock.getStockId()).add(stock);
+					Thread.sleep(3000);
+					final HttpGet[] requests = AllStocksRequests;
+					final CountDownLatch latch = new CountDownLatch(requests.length);
+					for (final HttpGet request : requests) {
+						httpclient.execute(request, new FutureCallback<HttpResponse>() {
+
+							public void completed(final HttpResponse response) {
+								latch.countDown();
+								try {
+									String stockStrData = EntityUtils.toString(response.getEntity());
+									// System.out.println(stockStrData);
+									Stock stock = parseOnlineStrDataToStock(stockStrData);
+									// System.out.println("current price is : "
+									// +stock.getPrice());
+									if (stock == null) {
+										return;
 									}
+									// first time get the stock info
+									if (ALL_STOCKS_CACHE.get(stock.getStockId()) == null) {
+										ArrayList<Stock> singleStockList = new ArrayList<>(1);
+										singleStockList.add(stock);
+										ALL_STOCKS_CACHE.put(stock.getStockId(), singleStockList);
+									} else {
+										int stockAmount = ALL_STOCKS_CACHE.get(stock.getStockId()).size();
+										Stock lastStock = ALL_STOCKS_CACHE.get(stock.getStockId()).get(stockAmount - 1);
+										if (lastStock.getPrice() != stock.getPrice() && lastStock.getTime().before(stock.getTime())) {
+											ALL_STOCKS_CACHE.get(stock.getStockId()).add(stock);
+										}
+									}
+								} catch (IOException e) {
+									e.printStackTrace();
 								}
-							} catch (IOException e) {
-								e.printStackTrace();
 							}
-						}
 
-						public void failed(final Exception ex) {
-							latch.countDown();
-							System.out.println(request.getRequestLine() + "->" + ex);
-						}
+							public void failed(final Exception ex) {
+								latch.countDown();
+								System.out.println(request.getRequestLine() + "->" + ex);
+							}
 
-						public void cancelled() {
-							latch.countDown();
-							System.out.println(request.getRequestLine() + " cancelled");
-						}
+							public void cancelled() {
+								latch.countDown();
+								System.out.println(request.getRequestLine() + " cancelled");
+							}
 
-					});
+						});
+					}
+					latch.await();
+					System.out.println("Shutting down");
+				} else if (StockUtil.isInMiddayNoneTradingTime()) {
+					Calendar currentTime = Calendar.getInstance();
+					Thread.sleep(StockUtil.AFTERNOON_START.getTimeInMillis() - currentTime.getTimeInMillis());
+				} else {
+					System.out.println("finished , not trading time");
+					break;
 				}
-				latch.await();
-				System.out.println("Shutting down");
 			}
 		} finally {
 			httpclient.close();
