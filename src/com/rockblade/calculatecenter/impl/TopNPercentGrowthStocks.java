@@ -84,8 +84,8 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 		}
 
 		List<Stock> targetStockList = new ArrayList<>();
-		targetStockList = calculator.getTopStocks(3, testMap);
-		System.out.println("the top 3 are : ");
+		targetStockList = calculator.getTopStocks(5, testMap);
+		System.out.println("the top 5 are : ");
 		for (Stock stock : targetStockList) {
 			System.out.print(stock.getStockId() + " , ");
 		}

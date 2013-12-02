@@ -18,7 +18,7 @@ import com.rockblade.model.Stock;
  */
 
 public abstract class AbstractTopNCalculator implements TopNCalculator {
-	
+
 	protected final int N = 5;
 
 	@Override
