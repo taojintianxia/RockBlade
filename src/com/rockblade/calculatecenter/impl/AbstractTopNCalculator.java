@@ -18,6 +18,8 @@ import com.rockblade.model.Stock;
  */
 
 public abstract class AbstractTopNCalculator implements TopNCalculator {
+	
+	protected final int N = 5;
 
 	@Override
 	public abstract List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap);
