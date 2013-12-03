@@ -19,10 +19,8 @@ public class CacheToDB extends TimerTask {
 
 	@Override
 	public void run() {
-
 		try {
-			StockCache.ALL_STOCK_ID.add("002024");
-			StockCache.ALL_STOCK_ID.add("600598");
+			
 			final CacheToDBPersistence cacheToDB = new CacheToDBPersistence();
 			while (true) {
 				if (StockUtil.isInTradingTime()) {
