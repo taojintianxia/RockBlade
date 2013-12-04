@@ -38,7 +38,7 @@ public class TOPNBidStocks extends AbstractTopNCalculator {
 			stockBidMap.put(stockId, totalBid);
 		}
 
-		topBidStocksId = getTopNByMapValueInRevertedSequence(N, stockBidMap);
+		topBidStocksId = getTopNByMapValueInRevertedSequence(topNum, stockBidMap);
 
 		for (String stockId : topBidStocksId) {
 			List<Stock> stocksList = stocksMap.get(stockId);

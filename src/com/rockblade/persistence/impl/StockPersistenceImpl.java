@@ -5,14 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.rockblade.cache.StockCache;
 import com.rockblade.model.Stock;
-import com.rockblade.persistence.StockPersistence;
 
 /**
  * 
@@ -25,8 +23,8 @@ import com.rockblade.persistence.StockPersistence;
 public class StockPersistenceImpl {
 
 	private static Connection conn;
-	private final String INSERT_STOCKDETAIL_SQL = "insert into stockdetail values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	private final String INSERT_DAILYSTOCK_SQL = "insert into dailystock values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private final String INSERT_STOCK_DETAIL_SQL = "insert into stockdetail values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private final String INSERT_DAILY_STOCK_SQL = "insert into dailystock values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	static {
 		try {
@@ -37,7 +35,15 @@ public class StockPersistenceImpl {
 
 	}
 
-	public void saveStocks(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
+	public void saveStockByIndex(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
+		saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_STOCK_DETAIL_SQL);
+	}
+	
+	public void saveLastStockRecord(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
+		saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_DAILY_STOCK_SQL);
+	}
+
+	public void saveStocks(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker, String SQL) throws SQLException {
 		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
 			if (stockMapIndexer.get(entry.getKey()) != null) {
 				List<Stock> stockList = entry.getValue();
@@ -50,7 +56,7 @@ public class StockPersistenceImpl {
 				}
 
 				for (int i = start; i <= end; i++) {
-					PreparedStatement stmt = conn.prepareStatement(INSERT_STOCKDETAIL_SQL);
+					PreparedStatement stmt = conn.prepareStatement(SQL);
 					transferStockToPreparedStatment(stockList.get(i), stmt);
 					stmt.execute();
 				}
@@ -60,13 +66,13 @@ public class StockPersistenceImpl {
 				stockMapIndexer.put(entry.getKey(), tempIndexer);
 			}
 		}
-		
+
 		StockCache.persisFinishedTime.setTime(new Date());
 	}
 
 	public void saveStock(Map<String, Stock> stockMap) throws SQLException {
 		for (Map.Entry<String, Stock> entry : stockMap.entrySet()) {
-			PreparedStatement prepareStatement = conn.prepareStatement(INSERT_DAILYSTOCK_SQL);
+			PreparedStatement prepareStatement = conn.prepareStatement(INSERT_DAILY_STOCK_SQL);
 			transferStockToPreparedStatment(entry.getValue(), prepareStatement);
 			prepareStatement.execute();
 		}

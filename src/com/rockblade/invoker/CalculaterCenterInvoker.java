@@ -25,16 +25,17 @@ public class CalculaterCenterInvoker extends TimerTask {
 	public void run() {
 		while (true) {
 			if (StockUtil.isInTradingTime()) {
-				try {
-					Thread.sleep(5*StockUtil.MINUTE);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+
 				Map<String, List<Stock>> recentStocksMap = new HashMap<>();
-				recentStocksMap = StockCache.getStocksInSpecificTime(5 * StockUtil.MINUTE);
+				recentStocksMap = StockCache.getStocksInPreviousTime(StockUtil.TOP_NUM * StockUtil.MINUTE);
 				TOPNAmountStocks topAmountStockCal = new TOPNAmountStocks();
 				System.out.println("Top Amount stocks are as following : ");
 				printStocks(topAmountStockCal.getTopStocks(5, recentStocksMap));
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			} else if (StockUtil.isInMiddayNoneTradingTime()) {
 				Calendar currentTime = Calendar.getInstance();
 				try {
