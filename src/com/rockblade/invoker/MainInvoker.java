@@ -15,7 +15,7 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public class Test {
+public class MainInvoker {
 
 	public static void main(String... args) throws Exception {
 		
