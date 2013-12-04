@@ -40,7 +40,7 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 			}
 		}
 
-		topStockIdsList = getTopNByMapValueInRevertedSequence(N, stockPercentDiffMap);
+		topStockIdsList = getTopNByMapValueInRevertedSequence(topNum, stockPercentDiffMap);
 		if (topStockIdsList.size() != n) {
 			System.err.println("What the hell ?!");
 		}
