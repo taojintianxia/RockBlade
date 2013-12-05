@@ -30,8 +30,9 @@ public class CacheToDBPersistence implements StockPersistence {
 		updateCacheIndexer(stockList);
 
 		try {
-			jdbcManager.saveStockByIndex(ALL_STOCKS_CACHE, persistenceIndexer, ALL_STOCK_NEED_SAVED_MARKER);
+			jdbcManager.saveStocks(ALL_STOCKS_CACHE, persistenceIndexer, ALL_STOCK_NEED_SAVED_MARKER);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

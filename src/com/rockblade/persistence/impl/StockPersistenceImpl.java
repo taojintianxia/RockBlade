@@ -5,9 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +36,14 @@ public class StockPersistenceImpl {
 	}
 
 	public void saveStockByIndex(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
-		Map<String, List<Stock>> expectToSaveStocksMap = new HashMap<>();
+		saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_STOCK_DETAIL_SQL);
+	}
+	
+	public void saveLastStockRecord(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
+		saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_DAILY_STOCK_SQL);
+	}
+
+	public void saveStocks(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker, String SQL) throws SQLException {
 		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
 			if (stockMapIndexer.get(entry.getKey()) != null) {
 				List<Stock> stockList = entry.getValue();
@@ -49,33 +54,16 @@ public class StockPersistenceImpl {
 				if (!needToBeSaved) {
 					continue;
 				}
-				
-				List<Stock> segmentStocks = new ArrayList<>();
-				segmentStocks.addAll(stockList.subList(start, end));
-				expectToSaveStocksMap.put(entry.getKey(), segmentStocks);
-				saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_STOCK_DETAIL_SQL);
-				Integer[] tempIndexer = new Integer[2];
-				tempIndexer[0] = tempIndexer[1] = end;
-				stockMapIndexer.put(entry.getKey(), tempIndexer);
-			}
-		}
-		
-	}
 
-	public void saveLastStockRecord(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
-		saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_DAILY_STOCK_SQL);
-	}
-
-	public void saveStocks(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker, String SQL) throws SQLException {
-		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
-			if (stockMapIndexer.get(entry.getKey()) != null) {
-				List<Stock> stockList = entry.getValue();
-				int stockSize = stockList.size();
-				for (int i = 0; i <= stockSize; i++) {
+				for (int i = start; i <= end; i++) {
 					PreparedStatement stmt = conn.prepareStatement(SQL);
 					transferStockToPreparedStatment(stockList.get(i), stmt);
 					stmt.execute();
 				}
+
+				Integer[] tempIndexer = new Integer[2];
+				tempIndexer[0] = tempIndexer[1] = end;
+				stockMapIndexer.put(entry.getKey(), tempIndexer);
 			}
 		}
 
