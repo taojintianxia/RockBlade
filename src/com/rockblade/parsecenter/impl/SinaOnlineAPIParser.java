@@ -93,6 +93,7 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 	@Override
 	public List<Stock> getStocksByIds(List<String> stockIdList) throws InterruptedException, IOException {
 
+		stockIdList.subList(0, 200);
 		stocksList.clear();
 		final int stockAmount = stockIdList.size();
 		String[] uriArray = new String[stockAmount];

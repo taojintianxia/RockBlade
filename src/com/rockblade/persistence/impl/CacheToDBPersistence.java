@@ -14,7 +14,6 @@ import com.rockblade.persistence.StockPersistence;
 
 /**
  * 
- * 
  * @author Kane.Sun
  * @version Nov 18, 2013 4:02:16 PM
  * 
