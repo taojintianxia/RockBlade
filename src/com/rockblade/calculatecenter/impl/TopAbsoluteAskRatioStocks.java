@@ -27,15 +27,18 @@ public class TopAbsoluteAskRatioStocks extends AbstractTopNCalculator {
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
+			Stock lastStock = stocks.get(stocks.size() - 1);
 			int stockSize = stocks.size();
-			if (stockSize > 1) {
+			if (!stocks.isEmpty() && !lastStock.isSuspension()) {
 				totalAbsoluteAsk = stocks.get(0).getAsk1Price();
-				for (int i = 1; i < stockSize; i++) {
+				for (int i = 0; i < stockSize; i++) {
 					if (stocks.get(i) != stocks.get(i - 1)) {
 						totalAbsoluteAsk += stocks.get(i).getAsk1Price() - stocks.get(i).getBid1Price();
 					}
 				}
-				absoluteAskRatioStockMap.put(stockId, totalAbsoluteAsk * StockUtil.ABSOLUTE_ASK_RATIO_FACTOR / stocks.get(stocks.size() - 1).getAmount());
+				if (lastStock.getAmount() > 0) {
+					absoluteAskRatioStockMap.put(stockId, totalAbsoluteAsk * StockUtil.ABSOLUTE_ASK_RATIO_FACTOR / lastStock.getAmount());
+				}
 			}
 		}
 

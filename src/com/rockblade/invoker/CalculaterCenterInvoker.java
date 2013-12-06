@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.TimerTask;
 
 import com.rockblade.cache.StockCache;
+import com.rockblade.calculatecenter.impl.TopAbsoluteAskRatioStocks;
+import com.rockblade.calculatecenter.impl.TopAbsoluteAskStocks;
 import com.rockblade.calculatecenter.impl.TopAmountStocks;
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
@@ -29,8 +31,14 @@ public class CalculaterCenterInvoker extends TimerTask {
 				Map<String, List<Stock>> recentStocksMap = new HashMap<>();
 				recentStocksMap = StockCache.getStocksInPreviousTime(StockUtil.TOP_NUM * StockUtil.MINUTE);
 				TopAmountStocks topAmountStockCal = new TopAmountStocks();
+				TopAbsoluteAskStocks topAbsoluteAskStocks = new TopAbsoluteAskStocks();
+				TopAbsoluteAskRatioStocks topAbsoluteAskRatioStocks = new TopAbsoluteAskRatioStocks();
 				System.out.println("Top Amount stocks are as following : ");
 				printStocks(topAmountStockCal.getTopStocks(5, recentStocksMap));
+				System.out.println("Top Absolute Ask stocks are as following : ");
+				printStocks(topAbsoluteAskStocks.getTopStocks(5, recentStocksMap));
+				System.out.println("Top Absolute Ask Ratio stocks are as following : ");
+				printStocks(topAbsoluteAskRatioStocks.getTopStocks(5, recentStocksMap));
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {

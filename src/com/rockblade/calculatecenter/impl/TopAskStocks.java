@@ -8,14 +8,14 @@ import java.util.Map;
 import com.rockblade.model.Stock;
 
 /**
- *
- *
+ * 
+ * 
  * @author Kane.Sun
  * @version Dec 6, 2013 1:36:50 PM
  * 
  */
 
-public class TopAskStocks extends AbstractTopNCalculator{
+public class TopAskStocks extends AbstractTopNCalculator {
 
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
@@ -27,15 +27,15 @@ public class TopAskStocks extends AbstractTopNCalculator{
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
 			int stockSize = stocks.size();
-			if (stockSize > 1) {
-				totalAsk = stocks.get(0).getAsk1Price();
-				for (int i = 1; i < stockSize; i++) {
+			if (!stocks.isEmpty()) {
+				totalAsk = 0.0;
+				for (int i = 0; i < stockSize; i++) {
 					if (stocks.get(i) != stocks.get(i - 1)) {
 						totalAsk += stocks.get(i).getAsk1Price();
 					}
 				}
+				stockAskMap.put(stockId, totalAsk);
 			}
-			stockAskMap.put(stockId, totalAsk);
 		}
 
 		topAskStocksId = getTopNByMapValueInRevertedSequence(topNum, stockAskMap);
@@ -47,10 +47,10 @@ public class TopAskStocks extends AbstractTopNCalculator{
 
 		return topStocks;
 	}
-	
+
 	@Override
 	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
-		return getTopStocks(N,stocksMap);
+		return getTopStocks(N, stocksMap);
 	}
 
 }

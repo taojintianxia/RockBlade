@@ -27,15 +27,15 @@ public class TopBidStocks extends AbstractTopNCalculator {
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
 			int stockSize = stocks.size();
-			if (stockSize > 1) {
-				totalBid = stocks.get(0).getBid1Price();
-				for (int i = 1; i < stockSize; i++) {
+			if (!stocks.isEmpty()) {
+				totalBid = 0.0;
+				for (int i = 0; i < stockSize; i++) {
 					if (stocks.get(i) != stocks.get(i - 1)) {
 						totalBid += stocks.get(i).getBid1Price();
 					}
 				}
+				stockBidMap.put(stockId, totalBid);
 			}
-			stockBidMap.put(stockId, totalBid);
 		}
 
 		topBidStocksId = getTopNByMapValueInRevertedSequence(topNum, stockBidMap);
@@ -47,10 +47,10 @@ public class TopBidStocks extends AbstractTopNCalculator {
 
 		return topStocks;
 	}
-	
+
 	@Override
 	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
-		return getTopStocks(N,stocksMap);
+		return getTopStocks(N, stocksMap);
 	}
 
 }

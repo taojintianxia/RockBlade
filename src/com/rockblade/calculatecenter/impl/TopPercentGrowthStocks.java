@@ -23,22 +23,26 @@ public class TopPercentGrowthStocks extends AbstractTopNCalculator {
 
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
-		Map<String, Double> stockPercentDiffMap = new LinkedHashMap<>();
+		Map<String, Double> stockPercentDifferenceMap = new LinkedHashMap<>();
 		List<String> topStockIdsList = new ArrayList<>(n);
 		List<Stock> topStocksList = new ArrayList<>(n);
 		for (Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stockList = entry.getValue();
-			// stock is suspension
-			if (stockList.size() < 2) {
-				stockPercentDiffMap.put(stockId, 0.0);
-			} else {
-				double diff = stockList.get(stockList.size() - 1).getPercent() - stockList.get(0).getPercent();
-				stockPercentDiffMap.put(stockId, diff);
+			int stockSize = stockList.size();
+			Double totalPercentDifference = -10.0;
+			if (stockSize > 1) {
+				for (int i = 1; i < stockSize; i++) {
+					totalPercentDifference += stockList.get(i).getPercent() - stockList.get(i - 1).getPercent();
+				}
+				stockPercentDifferenceMap.put(stockId, totalPercentDifference);
+			} else if (!stockList.isEmpty()) {
+				stockPercentDifferenceMap.put(stockId, stockList.get(0).getPercent());
 			}
 		}
 
-		topStockIdsList = getTopNByMapValueInRevertedSequence(topNum, stockPercentDiffMap);
+		topStockIdsList = getTopNByMapValueInRevertedSequence(topNum, stockPercentDifferenceMap);
+
 		if (topStockIdsList.size() != n) {
 			System.err.println("What the hell ?!");
 		}
@@ -49,10 +53,10 @@ public class TopPercentGrowthStocks extends AbstractTopNCalculator {
 
 		return topStocksList;
 	}
-	
+
 	@Override
 	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
-		return getTopStocks(N,stocksMap);
+		return getTopStocks(N, stocksMap);
 	}
 
 	public static void main(String... args) {
