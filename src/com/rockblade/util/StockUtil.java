@@ -34,6 +34,7 @@ public class StockUtil {
 
 	public final static long MINUTE = 1000 * 60;
 	public final static int TOP_NUM = 5;
+	public final static int ABSOLUTE_ASK_RATIO_FACTOR = 100;
 
 	public static final Calendar FORENOON_START = Calendar.getInstance();
 	public static final Calendar FORENOON_END = Calendar.getInstance();

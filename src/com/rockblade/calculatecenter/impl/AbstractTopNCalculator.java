@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import com.rockblade.calculatecenter.TopNCalculator;
+import com.rockblade.calculatecenter.TopCalculator;
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
 
@@ -18,7 +18,7 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public abstract class AbstractTopNCalculator implements TopNCalculator {
+public abstract class AbstractTopNCalculator implements TopCalculator {
 
 	protected final int topNum = StockUtil.TOP_NUM;
 

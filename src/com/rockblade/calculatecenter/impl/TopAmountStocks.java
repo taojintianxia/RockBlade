@@ -18,7 +18,7 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public class TOPNAmountStocks extends AbstractTopNCalculator {
+public class TopAmountStocks extends AbstractTopNCalculator {
 
 	@Override
 	public List<Stock> getTopStocks(int topNum, Map<String, List<Stock>> stocksMap) {
@@ -40,9 +40,14 @@ public class TOPNAmountStocks extends AbstractTopNCalculator {
 
 		return topStocks;
 	}
+	
+	@Override
+	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
+		return getTopStocks(N,stocksMap);
+	}
 
 	public static void main(String... args) {
-		TOPNAmountStocks task = new TOPNAmountStocks();
+		TopAmountStocks task = new TopAmountStocks();
 		Map<String, List<Stock>> allStocksMap = new HashMap<>();
 		Random random = new Random();
 		System.out.println("===========================================================");
@@ -83,4 +88,6 @@ public class TOPNAmountStocks extends AbstractTopNCalculator {
 			System.out.println("------------------------------------");
 		}
 	}
+
+
 }

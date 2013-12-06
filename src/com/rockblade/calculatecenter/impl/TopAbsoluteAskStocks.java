@@ -8,44 +8,49 @@ import java.util.Map;
 import com.rockblade.model.Stock;
 
 /**
- * 
- * 
+ *
+ *
  * @author Kane.Sun
- * @version Dec 2, 2013 6:21:38 PM
+ * @version Dec 6, 2013 1:38:26 PM
  * 
  */
 
-public class TOPNBidStocks extends AbstractTopNCalculator {
+public class TopAbsoluteAskStocks extends AbstractTopNCalculator{
 
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
 		List<Stock> topStocks = new ArrayList<>(n);
-		Map<String, Double> stockBidMap = new HashMap<>();
-		List<String> topBidStocksId = new ArrayList<>();
-		Double totalBid = 0.0;
+		Map<String, Double> absoluteAskStockMap = new HashMap<>();
+		List<String> topAbsoluteAskStocksId = new ArrayList<>();
+		Double totalAbsoluteAsk = 0.0;
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
 			int stockSize = stocks.size();
 			if (stockSize > 1) {
-				totalBid = stocks.get(0).getBid1Price();
+				totalAbsoluteAsk = stocks.get(0).getAsk1Price();
 				for (int i = 1; i < stockSize; i++) {
 					if (stocks.get(i) != stocks.get(i - 1)) {
-						totalBid += stocks.get(i).getBid1Price();
+						totalAbsoluteAsk += stocks.get(i).getAsk1Price() - stocks.get(i).getBid1Price();
 					}
 				}
 			}
-			stockBidMap.put(stockId, totalBid);
+			absoluteAskStockMap.put(stockId, totalAbsoluteAsk);
 		}
 
-		topBidStocksId = getTopNByMapValueInRevertedSequence(topNum, stockBidMap);
+		topAbsoluteAskStocksId = getTopNByMapValueInRevertedSequence(topNum, absoluteAskStockMap);
 
-		for (String stockId : topBidStocksId) {
+		for (String stockId : topAbsoluteAskStocksId) {
 			List<Stock> stocksList = stocksMap.get(stockId);
 			topStocks.add(stocksList.get(stocksList.size() - 1));
 		}
 
 		return topStocks;
+	}
+	
+	@Override
+	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
+		return getTopStocks(N,stocksMap);
 	}
 
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TimerTask;
 
 import com.rockblade.cache.StockCache;
-import com.rockblade.calculatecenter.impl.TOPNAmountStocks;
+import com.rockblade.calculatecenter.impl.TopAmountStocks;
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
 
@@ -28,7 +28,7 @@ public class CalculaterCenterInvoker extends TimerTask {
 
 				Map<String, List<Stock>> recentStocksMap = new HashMap<>();
 				recentStocksMap = StockCache.getStocksInPreviousTime(StockUtil.TOP_NUM * StockUtil.MINUTE);
-				TOPNAmountStocks topAmountStockCal = new TOPNAmountStocks();
+				TopAmountStocks topAmountStockCal = new TopAmountStocks();
 				System.out.println("Top Amount stocks are as following : ");
 				printStocks(topAmountStockCal.getTopStocks(5, recentStocksMap));
 				try {

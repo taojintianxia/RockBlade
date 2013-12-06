@@ -1,8 +1,6 @@
 package com.rockblade.calculatecenter.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,7 +19,7 @@ import com.rockblade.util.StockUtil;
  * 
  */
 
-public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
+public class TopPercentGrowthStocks extends AbstractTopNCalculator {
 
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
@@ -51,9 +49,14 @@ public class TopNPercentGrowthStocks extends AbstractTopNCalculator {
 
 		return topStocksList;
 	}
+	
+	@Override
+	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
+		return getTopStocks(N,stocksMap);
+	}
 
 	public static void main(String... args) {
-		TopNPercentGrowthStocks calculator = new TopNPercentGrowthStocks();
+		TopPercentGrowthStocks calculator = new TopPercentGrowthStocks();
 		Map<String, List<Stock>> testMap = new HashMap<>();
 		Random random = new Random();
 		for (int i = 0; i < 10; i++) {
