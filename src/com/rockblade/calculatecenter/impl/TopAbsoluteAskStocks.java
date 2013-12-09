@@ -22,19 +22,15 @@ public class TopAbsoluteAskStocks extends AbstractTopNCalculator {
 		List<Stock> topStocks = new ArrayList<>(n);
 		Map<String, Double> absoluteAskStockMap = new HashMap<>();
 		List<String> topAbsoluteAskStocksId = new ArrayList<>();
-		Double totalAbsoluteAsk = 0.0;
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
-			int stockSize = stocks.size();
 			if (!stocks.isEmpty()) {
-				totalAbsoluteAsk = 0.0;
-				for (int i = 0; i < stockSize; i++) {
-					if (stocks.get(i) != stocks.get(i - 1)) {
-						totalAbsoluteAsk += stocks.get(i).getAsk1Price() - stocks.get(i).getBid1Price();
-					}
-				}
-				absoluteAskStockMap.put(stockId, totalAbsoluteAsk);
+				int stockSize = stocks.size();
+				Stock lastStock = stocks.get(stockSize - 1);
+				double askAmount = lastStock.getAsk1Price() * lastStock.getAsk1Volume();
+				double bidAmount = lastStock.getBid1Price() * lastStock.getBid1Volume();
+				absoluteAskStockMap.put(stockId, askAmount - bidAmount);
 			}
 		}
 
