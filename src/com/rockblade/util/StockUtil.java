@@ -2,6 +2,7 @@ package com.rockblade.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -28,13 +29,14 @@ public class StockUtil {
 	public final static String PROPERTIES_FILE = "resources/stock_resources.properties";
 	public final static String ONLINE_API = "online_stock_parser";
 	public final static String SINA_ONLINE_API = "sina_stock_url";
-
 	public final static String ENCODING_GBK = "GBK";
 	public final static String ENCODING_UTF = "UTF-8";
 
 	public final static long MINUTE = 1000 * 60;
 	public final static int TOP_NUM = 5;
 	public final static int ABSOLUTE_ASK_RATIO_FACTOR = 100;
+
+	public final static DecimalFormat decimalFormat = new DecimalFormat(".##");
 
 	public static final Calendar FORENOON_START = Calendar.getInstance();
 	public static final Calendar FORENOON_END = Calendar.getInstance();

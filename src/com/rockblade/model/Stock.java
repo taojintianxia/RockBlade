@@ -336,8 +336,7 @@ public class Stock implements Cloneable {
 
 	@Override
 	public String toString() {
-		DecimalFormat decimalFormat = new DecimalFormat(".##");
-		return "Stock Name : " + getStockName() + " Amount : " + getAmount() ;
+		return "Stock Name : " + getStockName() + " Amount : " + getAmount();
 	}
 
 	@Override
