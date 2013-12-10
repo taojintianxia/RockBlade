@@ -40,7 +40,7 @@ public class CalculaterCenterInvoker extends TimerTask {
 				System.out.println("Top Absolute Ask Ratio stocks are as following : ");
 				printStocks(topAbsoluteAskRatioStocks.getTopStocks(5, recentStocksMap));
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(StockUtil.TOP_NUM * StockUtil.MINUTE / 2);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -66,5 +66,5 @@ public class CalculaterCenterInvoker extends TimerTask {
 			}
 		}
 	}
-	
+
 }
