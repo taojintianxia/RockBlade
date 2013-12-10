@@ -77,8 +77,11 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 					// get the response body as an array of bytes
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
-						stocksList.add(parseOnlineStrDataToStock(EntityUtils.toString(entity)));
-						// System.out.println(EntityUtils.toString(entity));
+						String stockStrData = EntityUtils.toString(entity);
+						Stock stock = parseOnlineStrDataToStock(stockStrData);
+						if (stock != null) {
+							stocksList.add(stock);
+						} 
 					}
 				} finally {
 					response.close();
@@ -92,9 +95,6 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 
 	@Override
 	public List<Stock> getStocksByIds(List<String> stockIdList) throws InterruptedException, IOException {
-
-		stockIdList.subList(0, 200);
-		stocksList.clear();
 		final int stockAmount = stockIdList.size();
 		String[] uriArray = new String[stockAmount];
 		for (int i = 0; i < stockAmount; i++) {
