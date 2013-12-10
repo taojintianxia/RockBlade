@@ -45,7 +45,7 @@ public class StockCache {
 		expectTime.setTimeInMillis(expectTime.getTimeInMillis() - timeInterval);
 		for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
 			String stockId = entry.getKey();
-			List<Stock> stockList = entry.getValue();
+			List<Stock> stockList = new ArrayList<>(entry.getValue());
 			List<Stock> stocksInTimeInterval = new ArrayList<>();
 			if (stockList != null) {
 				for (Stock stock : stockList) {
@@ -54,15 +54,15 @@ public class StockCache {
 					}
 				}
 
-				// when internet is so slow , can not get stock data in time
-				// interval
-				if (stocksInTimeInterval.isEmpty()) {
+				if (stocksInTimeInterval.isEmpty() && !stockList.isEmpty()) {
 					stocksInTimeInterval.add(stockList.get(stockList.size() - 1));
 				}
 
 				if (!stocksInTimeInterval.isEmpty()) {
 					expectStocksMap.put(stockId, stocksInTimeInterval);
 				}
+				
+				stockList.clear();
 			}
 		}
 
