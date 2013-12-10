@@ -78,10 +78,12 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
 						String stockStrData = EntityUtils.toString(entity);
-						Stock stock = parseOnlineStrDataToStock(stockStrData);
-						if (stock != null) {
-							stocksList.add(stock);
-						} 
+						if(!stockStrData.trim().equals("")){
+							Stock stock = parseOnlineStrDataToStock(stockStrData);
+							if (stock != null) {
+								stocksList.add(stock);
+							} 
+						}
 					}
 				} finally {
 					response.close();

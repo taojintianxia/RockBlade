@@ -32,7 +32,6 @@ public class StockDailyRecord extends TimerTask {
 		StockPersistenceImpl persis = new StockPersistenceImpl();
 		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
 		List<Stock> stocksList = new ArrayList<>();
-		List<String> testList = new ArrayList<>();
 		try {
 			stocksList = parser.getStocksByIds(StockCache.ALL_STOCK_ID);
 			for (Stock stock : stocksList) {
@@ -50,5 +49,4 @@ public class StockDailyRecord extends TimerTask {
 		StockDailyRecord re = new StockDailyRecord();
 		re.run();
 	}
-
 }
