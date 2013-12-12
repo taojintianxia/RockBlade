@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.rockblade.calculatecenter.TopCalculator;
 import com.rockblade.model.Stock;
@@ -118,5 +119,4 @@ public abstract class AbstractTopNCalculator implements TopCalculator {
 			}
 		});
 	}
-
 }

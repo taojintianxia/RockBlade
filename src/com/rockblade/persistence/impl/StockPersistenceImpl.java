@@ -49,7 +49,7 @@ public class StockPersistenceImpl {
 				if (!needToBeSaved) {
 					continue;
 				}
-				
+
 				List<Stock> segmentStocks = new ArrayList<>();
 				segmentStocks.addAll(stockList.subList(start, end));
 				expectToSaveStocksMap.put(entry.getKey(), segmentStocks);
@@ -59,7 +59,7 @@ public class StockPersistenceImpl {
 				stockMapIndexer.put(entry.getKey(), tempIndexer);
 			}
 		}
-		
+
 	}
 
 	public void saveLastStockRecord(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
@@ -69,13 +69,18 @@ public class StockPersistenceImpl {
 	public void saveStocks(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker, String SQL) throws SQLException {
 		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
 			if (stockMapIndexer.get(entry.getKey()) != null) {
-				List<Stock> stockList = entry.getValue();
+				List<Stock> stockList = new ArrayList<>(entry.getValue());
 				int stockSize = stockList.size();
-				for (int i = 0; i <= stockSize; i++) {
-					PreparedStatement stmt = conn.prepareStatement(SQL);
-					transferStockToPreparedStatment(stockList.get(i), stmt);
-					stmt.execute();
+				try {
+					for (int i = 0; i <= stockSize; i++) {
+						PreparedStatement stmt = conn.prepareStatement(SQL);
+						transferStockToPreparedStatment(stockList.get(i), stmt);
+						stmt.execute();
+					}
+				} catch (Exception e) {
+					System.out.println(stockList.get(stockSize-1));
 				}
+				stockList.clear();
 			}
 		}
 
