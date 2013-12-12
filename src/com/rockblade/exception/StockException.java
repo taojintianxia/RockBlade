@@ -9,5 +9,7 @@ package com.rockblade.exception;
  */
 
 public class StockException extends Exception {
+	
+	private static final long serialVersionUID = 7994502585422685631L;
 
 }

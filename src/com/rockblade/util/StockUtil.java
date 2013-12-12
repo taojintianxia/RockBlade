@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,11 +125,10 @@ public class StockUtil {
 
 	public static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValue(Map<K, V> targetMap) {
 		if (targetMap.isEmpty()) {
-			throw new IllegalArgumentException("Map is empty , check it!");
+			return new HashMap<>();
 		}
 
 		List<Map.Entry<K, V>> mapEntryList = new ArrayList<>(targetMap.entrySet());
-		// it's merge even tim sort , better than sort by myself
 		Collections.sort(mapEntryList, new Comparator<Map.Entry<K, V>>() {
 			@Override
 			public int compare(Map.Entry<K, V> map1, Map.Entry<K, V> map2) {
