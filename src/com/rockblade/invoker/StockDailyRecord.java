@@ -31,9 +31,8 @@ public class StockDailyRecord extends TimerTask {
 		Map<String, Stock> testMap = new HashMap<>();
 		StockPersistenceImpl persis = new StockPersistenceImpl();
 		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
-		List<Stock> stocksList = new ArrayList<>();
 		try {
-			stocksList = parser.getStocksByIds(StockCache.ALL_STOCK_ID);
+			List<Stock> stocksList = new ArrayList<>(parser.getStocksByIds(StockCache.ALL_STOCK_ID));
 			for (Stock stock : stocksList) {
 				testMap.put(stock.getStockId(), stock);
 			}

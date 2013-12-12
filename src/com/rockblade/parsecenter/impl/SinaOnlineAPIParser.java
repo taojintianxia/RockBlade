@@ -292,7 +292,6 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 						});
 					}
 					latch.await();
-					System.out.println("Shutting down");
 				} else if (StockUtil.isInMiddayNoneTradingTime()) {
 					Calendar currentTime = Calendar.getInstance();
 					Thread.sleep(StockUtil.AFTERNOON_START.getTimeInMillis() - currentTime.getTimeInMillis());
