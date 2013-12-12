@@ -33,12 +33,15 @@ public class CalculaterCenterInvoker extends TimerTask {
 				TopAmountStocks topAmountStockCal = new TopAmountStocks();
 				TopAbsoluteAskStocks topAbsoluteAskStocks = new TopAbsoluteAskStocks();
 				TopAbsoluteAskRatioStocks topAbsoluteAskRatioStocks = new TopAbsoluteAskRatioStocks();
-				System.out.println("Top Amount stocks are as following : ");
-				printStocks(topAmountStockCal.getTopStocks(5, recentStocksMap));
-				System.out.println("Top Absolute Ask stocks are as following : ");
-				printStocks(topAbsoluteAskStocks.getTopStocks(5, recentStocksMap));
-				System.out.println("Top Absolute Ask Ratio stocks are as following : ");
-				printStocks(topAbsoluteAskRatioStocks.getTopStocks(5, recentStocksMap));
+				System.out.println("===========================================================================");
+				System.out.println("成交量前" + StockUtil.TOP_NUM + "的是 : ");
+				printStocks(topAmountStockCal.getTopStocks(StockUtil.TOP_NUM, recentStocksMap));
+				System.out.println("买一净值前" + StockUtil.TOP_NUM + "的是 : ");
+				printStocks(topAbsoluteAskStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap));
+				System.out.println("买一净比前" + StockUtil.TOP_NUM + "的是 : ");
+				printStocks(topAbsoluteAskRatioStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap));
+				System.out.println("===========================================================================");
+				System.out.println("\n\n");
 				try {
 					Thread.sleep(StockUtil.TOP_NUM * StockUtil.MINUTE / 2);
 				} catch (InterruptedException e) {
