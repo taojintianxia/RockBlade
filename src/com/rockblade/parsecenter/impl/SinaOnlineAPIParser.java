@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -35,7 +34,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import com.rockblade.helper.StockIdReader;
 import com.rockblade.model.Stock;
 import com.rockblade.parsecenter.OnlineAPIParser;
 import com.rockblade.util.StockUtil;
@@ -78,11 +76,11 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
 						String stockStrData = EntityUtils.toString(entity);
-						if(!stockStrData.trim().equals("")){
+						if (!stockStrData.trim().equals("")) {
 							Stock stock = parseOnlineStrDataToStock(stockStrData);
 							if (stock != null) {
 								stocksList.add(stock);
-							} 
+							}
 						}
 					}
 				} finally {
@@ -92,7 +90,6 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 				System.out.println(id + " - error: " + e);
 			}
 		}
-
 	}
 
 	@Override
@@ -120,17 +117,14 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 				HttpGet httpget = new HttpGet(urisToGet[i]);
 				threads[i] = new GetThread(httpclient, httpget, i + 1);
 			}
-
 			// start the threads
 			for (int j = 0; j < threads.length; j++) {
 				threads[j].start();
 			}
-
 			// join the threads
 			for (int j = 0; j < threads.length; j++) {
 				threads[j].join();
 			}
-
 		} finally {
 			httpclient.close();
 		}
@@ -304,26 +298,6 @@ public class SinaOnlineAPIParser extends OnlineAPIParser {
 			httpclient.close();
 		}
 		System.out.println("Done");
-
-	}
-
-	public static void main(String... args) {
-		SinaOnlineAPIParser parser = new SinaOnlineAPIParser();
-		StockIdReader reader = new StockIdReader();
-		reader.readStockIdFromFile();
-		Date targetDate = new Date();
-		List<Stock> stockList = new ArrayList<>();
-		targetDate.setTime(System.currentTimeMillis() + 10 * 60 * 1000);
-		while (new Date().before(targetDate)) {
-			try {
-				stockList = parser.getStocksByIds(ALL_STOCK_ID);
-				System.out.println("==========stock list size : " + stockList.size() + "==========");
-				StockUtil.printOutToFile(stockList);
-			} catch (InterruptedException | IOException e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
 
 }

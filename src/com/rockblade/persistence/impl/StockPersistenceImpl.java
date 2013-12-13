@@ -71,10 +71,14 @@ public class StockPersistenceImpl {
 			if (stockMapIndexer.get(entry.getKey()) != null) {
 				List<Stock> stockList = new ArrayList<>(entry.getValue());
 				int stockSize = stockList.size();
-				for (int i = 0; i <= stockSize; i++) {
-					PreparedStatement stmt = conn.prepareStatement(SQL);
-					transferStockToPreparedStatment(stockList.get(i), stmt);
-					stmt.execute();
+				try {
+					for (int i = 0; i <= stockSize; i++) {
+						PreparedStatement stmt = conn.prepareStatement(SQL);
+						transferStockToPreparedStatment(stockList.get(i), stmt);
+						stmt.execute();
+					}
+				} catch (Exception e) {
+					System.out.println(stockList.get(stockSize-1));
 				}
 				stockList.clear();
 			}

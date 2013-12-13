@@ -17,7 +17,7 @@ import com.rockblade.util.StockUtil;
  */
 
 public class TopAbsoluteAskRatioStocks extends AbstractTopNCalculator {
-
+	
 	@Override
 	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
 		List<Stock> topStocks = new ArrayList<>(n);

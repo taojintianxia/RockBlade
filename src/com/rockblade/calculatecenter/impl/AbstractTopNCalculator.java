@@ -118,5 +118,4 @@ public abstract class AbstractTopNCalculator implements TopCalculator {
 			}
 		});
 	}
-
 }

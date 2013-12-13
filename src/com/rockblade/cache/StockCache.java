@@ -36,8 +36,7 @@ public class StockCache {
 
 	public static void cleanCache() {
 		persistenceIndexer.clear();
-		ALL_STOCKS_CACHE.clear();
-	}
+ 	}
 
 	public static Map<String, List<Stock>> getStocksInPreviousTime(long timeInterval) {
 		Map<String, List<Stock>> expectStocksMap = new HashMap<>();
