@@ -23,7 +23,7 @@ public abstract class AbstractTopNCalculator implements TopCalculator {
 	protected final int topNum = StockUtil.TOP_NUM;
 
 	@Override
-	public abstract List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap);
+	public abstract List<String> getTopStocks(int n, Map<String, List<Stock>> stocksMap);
 
 	protected List<String> getTopNByMapValueInSequence(int n, Map<String, Double> targetMap) {
 		return sortAndGetTopNByMapValue(n, targetMap, true);

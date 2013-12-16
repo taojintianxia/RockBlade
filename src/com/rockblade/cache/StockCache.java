@@ -36,13 +36,13 @@ public class StockCache {
 
 	public static void cleanCache() {
 		persistenceIndexer.clear();
- 	}
+	}
 
-	public static Map<String, List<Stock>> getStocksInPreviousTime(long timeInterval) {
+	public static Map<String, List<Stock>> getStocksInPreviousTime(Map<String, List<Stock>> allStocksCache, long timeInterval) {
 		Map<String, List<Stock>> expectStocksMap = new HashMap<>();
 		Calendar expectTime = Calendar.getInstance();
 		expectTime.setTimeInMillis(expectTime.getTimeInMillis() - timeInterval);
-		for (Map.Entry<String, List<Stock>> entry : ALL_STOCKS_CACHE.entrySet()) {
+		for (Map.Entry<String, List<Stock>> entry : allStocksCache.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stockList = new ArrayList<>(entry.getValue());
 			List<Stock> stocksInTimeInterval = new ArrayList<>();
@@ -60,7 +60,7 @@ public class StockCache {
 				if (!stocksInTimeInterval.isEmpty()) {
 					expectStocksMap.put(stockId, stocksInTimeInterval);
 				}
-				
+
 				stockList.clear();
 			}
 		}

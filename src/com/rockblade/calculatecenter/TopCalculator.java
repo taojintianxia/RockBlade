@@ -18,8 +18,8 @@ public interface TopCalculator {
 	
 	public static int N = StockUtil.TOP_NUM;
 	
-	public abstract List<Stock> getTopStocks(int topN , Map<String , List<Stock>> stocksMap);
+	public abstract List<String> getTopStocks(int topN , Map<String , List<Stock>> stocksMap);
 	
-	public List<Stock> getTopStocks(Map<String , List<Stock>> stocksMap);
+	public List<String> getTopStocks(Map<String , List<Stock>> stocksMap);
 
 }

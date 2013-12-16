@@ -18,8 +18,7 @@ import com.rockblade.model.Stock;
 public class TopAbsoluteAskStocks extends AbstractTopNCalculator {
 
 	@Override
-	public List<Stock> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
-		List<Stock> topStocks = new ArrayList<>(n);
+	public List<String> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
 		Map<String, Double> absoluteAskStockMap = new HashMap<>();
 		List<String> topAbsoluteAskStocksId = new ArrayList<>();
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
@@ -36,16 +35,11 @@ public class TopAbsoluteAskStocks extends AbstractTopNCalculator {
 
 		topAbsoluteAskStocksId = getTopNByMapValueInRevertedSequence(topNum, absoluteAskStockMap);
 
-		for (String stockId : topAbsoluteAskStocksId) {
-			List<Stock> stocksList = stocksMap.get(stockId);
-			topStocks.add(stocksList.get(stocksList.size() - 1));
-		}
-
-		return topStocks;
+		return topAbsoluteAskStocksId;
 	}
 
 	@Override
-	public List<Stock> getTopStocks(Map<String, List<Stock>> stocksMap) {
+	public List<String> getTopStocks(Map<String, List<Stock>> stocksMap) {
 		return getTopStocks(N, stocksMap);
 	}
 
