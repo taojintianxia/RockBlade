@@ -1,6 +1,5 @@
 package com.rockblade.model;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 
 /**

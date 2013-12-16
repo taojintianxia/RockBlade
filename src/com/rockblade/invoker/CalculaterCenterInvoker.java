@@ -29,19 +29,20 @@ public class CalculaterCenterInvoker extends TimerTask {
 			if (StockUtil.isInTradingTime()) {
 
 				Map<String, List<Stock>> recentStocksMap = new HashMap<>();
-				recentStocksMap = StockCache.getStocksInPreviousTime(StockUtil.TOP_NUM * StockUtil.MINUTE);
+				recentStocksMap = StockCache.getStocksInPreviousTime(StockCache.ALL_STOCKS_CACHE, StockUtil.TOP_NUM * StockUtil.MINUTE);
 				TopAmountStocks topAmountStockCal = new TopAmountStocks();
 				TopAbsoluteAskStocks topAbsoluteAskStocks = new TopAbsoluteAskStocks();
 				TopAbsoluteAskRatioStocks topAbsoluteAskRatioStocks = new TopAbsoluteAskRatioStocks();
 				System.out.println("===========================================================================");
 				System.out.println("成交量前" + StockUtil.TOP_NUM + "的是 : ");
-				printStocks(topAmountStockCal.getTopStocks(StockUtil.TOP_NUM, recentStocksMap));
+				printStocks(topAmountStockCal.getTopStocks(StockUtil.TOP_NUM, recentStocksMap), recentStocksMap);
 				System.out.println("买一净值前" + StockUtil.TOP_NUM + "的是 : ");
-				printStocks(topAbsoluteAskStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap));
+				printStocks(topAbsoluteAskStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap), recentStocksMap);
 				System.out.println("买一净比前" + StockUtil.TOP_NUM + "的是 : ");
-				printStocks(topAbsoluteAskRatioStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap));
+				printStocks(topAbsoluteAskRatioStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap), recentStocksMap);
 				System.out.println("===========================================================================");
 				System.out.println("\n\n");
+				recentStocksMap.clear();
 				try {
 					Thread.sleep(StockUtil.TOP_NUM * StockUtil.MINUTE / 2);
 				} catch (InterruptedException e) {
@@ -52,7 +53,6 @@ public class CalculaterCenterInvoker extends TimerTask {
 				try {
 					Thread.sleep(StockUtil.AFTERNOON_START.getTimeInMillis() - currentTime.getTimeInMillis());
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 				}
 			} else {
 				System.out.println("finished , not trading time");
@@ -62,10 +62,14 @@ public class CalculaterCenterInvoker extends TimerTask {
 
 	}
 
-	private void printStocks(List<Stock> stockList) {
-		if (stockList.size() > 0) {
-			for (Stock stock : stockList) {
-				System.out.println(stock.toString());
+	private void printStocks(List<String> stockIdsList, Map<String, List<Stock>> recentStocksMap) {
+		if (stockIdsList.size() > 0) {
+			for (String str : stockIdsList) {
+				List<Stock> stockList = recentStocksMap.get(str);
+				if (!stockList.isEmpty()) {
+					int size = stockList.size();
+					System.out.println(stockList.get(size - 1));
+				}
 			}
 		}
 	}
