@@ -44,15 +44,17 @@ public class StockCache {
 		expectTime.setTimeInMillis(expectTime.getTimeInMillis() - timeInterval);
 		for (Map.Entry<String, List<Stock>> entry : allStocksCache.entrySet()) {
 			String stockId = entry.getKey();
-			List<Stock> stockList = new ArrayList<>(entry.getValue());
+			List<Stock> stockList = entry.getValue();
+			int lastStockIndex = stockList.size() - 1;
 			List<Stock> stocksInTimeInterval = new ArrayList<>();
 			if (stockList != null) {
-				for (Stock stock : stockList) {
-					if (stock.getTime().after(expectTime)) {
-						stocksInTimeInterval.add(stock);
+				for (int i = lastStockIndex; i >= 0; i--) {
+					if (stockList.get(i).getTime().after(expectTime)) {
+						stocksInTimeInterval.add(stockList.get(i));
 					}
 				}
 
+				// surged limit or decline limit
 				if (stocksInTimeInterval.isEmpty() && !stockList.isEmpty()) {
 					stocksInTimeInterval.add(stockList.get(stockList.size() - 1));
 				}
@@ -60,8 +62,6 @@ public class StockCache {
 				if (!stocksInTimeInterval.isEmpty()) {
 					expectStocksMap.put(stockId, stocksInTimeInterval);
 				}
-
-				stockList.clear();
 			}
 		}
 
