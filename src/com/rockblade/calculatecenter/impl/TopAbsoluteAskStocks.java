@@ -1,14 +1,15 @@
 package com.rockblade.calculatecenter.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.rockblade.calculatecenter.rules.impl.RaisingLimitExceptRule;
 import com.rockblade.model.Stock;
 
 /**
- * 
  * 
  * @author Kane.Sun
  * @version Dec 6, 2013 1:38:26 PM
@@ -18,9 +19,9 @@ import com.rockblade.model.Stock;
 public class TopAbsoluteAskStocks extends AbstractTopNCalculator {
 
 	@Override
-	public List<String> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
+	public Set<String> getTopStocks(int topN, Map<String, List<Stock>> stocksMap) {
 		Map<String, Double> absoluteAskStockMap = new HashMap<>();
-		List<String> topAbsoluteAskStocksId = new ArrayList<>();
+		Set<String> topAbsoluteAskStocksId = new LinkedHashSet<>();
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
@@ -33,13 +34,14 @@ public class TopAbsoluteAskStocks extends AbstractTopNCalculator {
 			}
 		}
 
-		topAbsoluteAskStocksId = getTopNByMapValueInRevertedSequence(topNum, absoluteAskStockMap);
+		topAbsoluteAskStocksId = getExpetedStockInRevertedSequence(absoluteAskStockMap);
+		topAbsoluteAskStocksId = RaisingLimitExceptRule.getInstance().filter(topN, topAbsoluteAskStocksId, stocksMap);
 
 		return topAbsoluteAskStocksId;
 	}
 
 	@Override
-	public List<String> getTopStocks(Map<String, List<Stock>> stocksMap) {
+	public Set<String> getTopStocks(Map<String, List<Stock>> stocksMap) {
 		return getTopStocks(N, stocksMap);
 	}
 

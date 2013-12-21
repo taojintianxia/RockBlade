@@ -2,6 +2,7 @@ package com.rockblade.calculatecenter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
@@ -18,8 +19,8 @@ public interface TopCalculator {
 	
 	public static int N = StockUtil.TOP_NUM;
 	
-	public abstract List<String> getTopStocks(int topN , Map<String , List<Stock>> stocksMap);
+	public abstract Set<String> getTopStocks(int topN , Map<String , List<Stock>> stocksMap);
 	
-	public List<String> getTopStocks(Map<String , List<Stock>> stocksMap);
+	public Set<String> getTopStocks(Map<String , List<Stock>> stocksMap);
 
 }
