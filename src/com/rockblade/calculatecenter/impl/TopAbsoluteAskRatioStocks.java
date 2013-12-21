@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.rockblade.calculatecenter.rules.impl.SurgedLimitExceptRule;
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
 
@@ -18,9 +19,9 @@ import com.rockblade.util.StockUtil;
  */
 
 public class TopAbsoluteAskRatioStocks extends AbstractTopNCalculator {
-	
+
 	@Override
-	private Set<String> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
+	public Set<String> getTopStocks(int topN, Map<String, List<Stock>> stocksMap) {
 		Map<String, Double> absoluteAskRatioStockMap = new HashMap<>();
 		Set<String> topAbsoluteAskRatioStocksId = new LinkedHashSet<>();
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
@@ -43,6 +44,7 @@ public class TopAbsoluteAskRatioStocks extends AbstractTopNCalculator {
 		}
 
 		topAbsoluteAskRatioStocksId = getExpetedStockInRevertedSequence(absoluteAskRatioStockMap);
+		topAbsoluteAskRatioStocksId = SurgedLimitExceptRule.getInstance().filter(topN, topAbsoluteAskRatioStocksId, stocksMap);
 
 		return topAbsoluteAskRatioStocksId;
 	}

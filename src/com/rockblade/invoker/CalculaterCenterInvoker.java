@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimerTask;
 
 import com.rockblade.cache.StockCache;
@@ -66,7 +67,7 @@ public class CalculaterCenterInvoker extends TimerTask {
 		}
 	}
 
-	private void printStocks(List<String> stockIdsList, Map<String, List<Stock>> recentStocksMap) {
+	private void printStocks(Set<String> stockIdsList, Map<String, List<Stock>> recentStocksMap) {
 		if (stockIdsList.size() > 0) {
 			for (String str : stockIdsList) {
 				List<Stock> stockList = recentStocksMap.get(str);
