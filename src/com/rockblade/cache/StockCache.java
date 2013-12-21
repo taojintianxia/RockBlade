@@ -54,7 +54,7 @@ public class StockCache {
 					}
 				}
 
-				// surged limit or decline limit
+				// raising limit or limit down
 				if (stocksInTimeInterval.isEmpty() && !stockList.isEmpty()) {
 					stocksInTimeInterval.add(stockList.get(stockList.size() - 1));
 				}

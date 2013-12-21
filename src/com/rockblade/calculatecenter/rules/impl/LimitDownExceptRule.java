@@ -9,17 +9,17 @@ import com.rockblade.calculatecenter.CalculationUtil;
 import com.rockblade.calculatecenter.rules.FilterRule;
 import com.rockblade.model.Stock;
 
-public class SurgedLimitExceptRule implements FilterRule {
+public class LimitDownExceptRule implements FilterRule {
 
-	private SurgedLimitExceptRule() {
+	private LimitDownExceptRule() {
 
 	}
 
 	private static class LazyHolder {
-		private static final SurgedLimitExceptRule INSTANCE = new SurgedLimitExceptRule();
+		private static final LimitDownExceptRule INSTANCE = new LimitDownExceptRule();
 	}
 
-	public static SurgedLimitExceptRule getInstance() {
+	public static LimitDownExceptRule getInstance() {
 		return LazyHolder.INSTANCE;
 	}
 
@@ -32,7 +32,7 @@ public class SurgedLimitExceptRule implements FilterRule {
 			}
 
 			List<Stock> stockList = recentStocks.get(stockId);
-			if (!CalculationUtil.isSurgedLimit(stockList.get(stockList.size() - 1))) {
+			if (!CalculationUtil.isRaisingLimit(stockList.get(stockList.size() - 1))) {
 				topNStockId.add(stockId);
 			}
 		}

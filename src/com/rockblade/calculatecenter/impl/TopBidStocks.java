@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.rockblade.calculatecenter.rules.impl.RaisingLimitExceptRule;
+import com.rockblade.calculatecenter.rules.impl.LimitDownExceptRule;
 //github.com/taojintianxia/RockBlade.git
 import com.rockblade.model.Stock;
 
@@ -41,8 +41,8 @@ public class TopBidStocks extends AbstractTopNCalculator {
 		}
 
 		topBidStocksId = getExpetedStockInRevertedSequence(stockBidMap);
-		topBidStocksId = RaisingLimitExceptRule.getInstance().filter(topN, topBidStocksId, stocksMap);
-		
+		topBidStocksId = LimitDownExceptRule.getInstance().filter(topN, topBidStocksId, stocksMap);
+
 		return topBidStocksId;
 	}
 

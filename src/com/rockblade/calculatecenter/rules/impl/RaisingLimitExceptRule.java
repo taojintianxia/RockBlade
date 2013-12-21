@@ -32,7 +32,7 @@ public class RaisingLimitExceptRule implements FilterRule {
 			}
 
 			List<Stock> stockList = recentStocks.get(stockId);
-			if (!CalculationUtil.isSurgedLimit(stockList.get(stockList.size() - 1))) {
+			if (!CalculationUtil.isRaisingLimit(stockList.get(stockList.size() - 1))) {
 				topNStockId.add(stockId);
 			}
 		}
