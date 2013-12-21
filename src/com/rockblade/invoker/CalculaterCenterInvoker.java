@@ -1,5 +1,11 @@
 package com.rockblade.invoker;
 
+import static com.rockblade.util.StockUtil.AFTERNOON_START;
+import static com.rockblade.util.StockUtil.MINUTE;
+import static com.rockblade.util.StockUtil.TOP_NUM;
+import static com.rockblade.util.StockUtil.isInMiddayNoneTradingTime;
+import static com.rockblade.util.StockUtil.isInTradingTime;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +17,6 @@ import com.rockblade.calculatecenter.impl.TopAbsoluteAskRatioStocks;
 import com.rockblade.calculatecenter.impl.TopAbsoluteAskStocks;
 import com.rockblade.calculatecenter.impl.TopAmountStocks;
 import com.rockblade.model.Stock;
-import com.rockblade.util.StockUtil;
 
 /**
  * 
@@ -26,32 +31,32 @@ public class CalculaterCenterInvoker extends TimerTask {
 	@Override
 	public void run() {
 		while (true) {
-			if (StockUtil.isInTradingTime()) {
+			if (isInTradingTime()) {
 
 				Map<String, List<Stock>> recentStocksMap = new HashMap<>();
-				recentStocksMap = StockCache.getStocksInPreviousTime(StockCache.ALL_STOCKS_CACHE, StockUtil.TOP_NUM * StockUtil.MINUTE);
+				recentStocksMap = StockCache.getStocksInPreviousTime(StockCache.ALL_STOCKS_CACHE, MINUTE);
 				TopAmountStocks topAmountStockCal = new TopAmountStocks();
 				TopAbsoluteAskStocks topAbsoluteAskStocks = new TopAbsoluteAskStocks();
 				TopAbsoluteAskRatioStocks topAbsoluteAskRatioStocks = new TopAbsoluteAskRatioStocks();
 				System.out.println("===========================================================================");
-				System.out.println("成交量前" + StockUtil.TOP_NUM + "的是 : ");
-				printStocks(topAmountStockCal.getTopStocks(StockUtil.TOP_NUM, recentStocksMap), recentStocksMap);
-				System.out.println("买一净值前" + StockUtil.TOP_NUM + "的是 : ");
-				printStocks(topAbsoluteAskStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap), recentStocksMap);
-				System.out.println("买一净比前" + StockUtil.TOP_NUM + "的是 : ");
-				printStocks(topAbsoluteAskRatioStocks.getTopStocks(StockUtil.TOP_NUM, recentStocksMap), recentStocksMap);
+				System.out.println("成交量前" + TOP_NUM + "的是 : ");
+				printStocks(topAmountStockCal.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
+				System.out.println("买一净值前" + TOP_NUM + "的是 : ");
+				printStocks(topAbsoluteAskStocks.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
+				System.out.println("买一净比前" + TOP_NUM + "的是 : ");
+				printStocks(topAbsoluteAskRatioStocks.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
 				System.out.println("===========================================================================");
 				System.out.println("\n\n");
 				recentStocksMap.clear();
 				try {
-					Thread.sleep(StockUtil.TOP_NUM * StockUtil.MINUTE / 2);
+					Thread.sleep(TOP_NUM * MINUTE / 2);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			} else if (StockUtil.isInMiddayNoneTradingTime()) {
+			} else if (isInMiddayNoneTradingTime()) {
 				Calendar currentTime = Calendar.getInstance();
 				try {
-					Thread.sleep(StockUtil.AFTERNOON_START.getTimeInMillis() - currentTime.getTimeInMillis());
+					Thread.sleep(AFTERNOON_START.getTimeInMillis() - currentTime.getTimeInMillis());
 				} catch (InterruptedException e) {
 				}
 			} else {
@@ -59,7 +64,6 @@ public class CalculaterCenterInvoker extends TimerTask {
 				break;
 			}
 		}
-
 	}
 
 	private void printStocks(List<String> stockIdsList, Map<String, List<Stock>> recentStocksMap) {

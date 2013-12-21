@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,15 +145,15 @@ public class StockUtil {
 		return targetMap;
 	}
 
-	public static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValueInRevertedSequence(Map<K, V> targetMap) {
+	public static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValueInRevertedSequence(LinkedHashMap<K, V> targetMap) {
 		return sortMapByValue(targetMap, false);
 	}
 
-	public static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValueInSequence(Map<K, V> targetMap) {
+	public static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValueInSequence(LinkedHashMap<K, V> targetMap) {
 		return sortMapByValue(targetMap, true);
 	}
 
-	private static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValue(Map<K, V> targetMap, final boolean order) {
+	private static <K extends Object, V extends Comparable<? super V>> Map<K, V> sortMapByValue(LinkedHashMap<K, V> targetMap, final boolean order) {
 		if (targetMap.isEmpty()) {
 			throw new IllegalArgumentException("Map is empty , check it!");
 		}

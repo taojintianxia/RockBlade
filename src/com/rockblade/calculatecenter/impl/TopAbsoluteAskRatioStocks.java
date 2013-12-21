@@ -1,9 +1,10 @@
 package com.rockblade.calculatecenter.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.rockblade.model.Stock;
 import com.rockblade.util.StockUtil;
@@ -19,9 +20,9 @@ import com.rockblade.util.StockUtil;
 public class TopAbsoluteAskRatioStocks extends AbstractTopNCalculator {
 	
 	@Override
-	public List<String> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
+	private Set<String> getTopStocks(int n, Map<String, List<Stock>> stocksMap) {
 		Map<String, Double> absoluteAskRatioStockMap = new HashMap<>();
-		List<String> topAbsoluteAskRatioStocksId = new ArrayList<>();
+		Set<String> topAbsoluteAskRatioStocksId = new LinkedHashSet<>();
 		for (Map.Entry<String, List<Stock>> entry : stocksMap.entrySet()) {
 			String stockId = entry.getKey();
 			List<Stock> stocks = entry.getValue();
@@ -41,13 +42,13 @@ public class TopAbsoluteAskRatioStocks extends AbstractTopNCalculator {
 			}
 		}
 
-		topAbsoluteAskRatioStocksId = getTopNByMapValueInRevertedSequence(topNum, absoluteAskRatioStockMap);
+		topAbsoluteAskRatioStocksId = getExpetedStockInRevertedSequence(absoluteAskRatioStockMap);
 
 		return topAbsoluteAskRatioStocksId;
 	}
 
 	@Override
-	public List<String> getTopStocks(Map<String, List<Stock>> stocksMap) {
+	public Set<String> getTopStocks(Map<String, List<Stock>> stocksMap) {
 		return getTopStocks(N, stocksMap);
 	}
 
