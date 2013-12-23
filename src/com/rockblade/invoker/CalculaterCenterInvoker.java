@@ -33,22 +33,23 @@ public class CalculaterCenterInvoker extends TimerTask {
 	public void run() {
 		while (true) {
 			if (isInTradingTime()) {
-
 				Map<String, List<Stock>> recentStocksMap = new HashMap<>();
 				recentStocksMap = StockCache.getStocksInPreviousTime(StockCache.ALL_STOCKS_CACHE, MINUTE);
-				TopAmountStocks topAmountStockCal = new TopAmountStocks();
-				TopAbsoluteAskStocks topAbsoluteAskStocks = new TopAbsoluteAskStocks();
-				TopAbsoluteAskRatioStocks topAbsoluteAskRatioStocks = new TopAbsoluteAskRatioStocks();
-				System.out.println("===========================================================================");
-				System.out.println("成交量前" + TOP_NUM + "的是 : ");
-				printStocks(topAmountStockCal.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
-				System.out.println("买一净值前" + TOP_NUM + "的是 : ");
-				printStocks(topAbsoluteAskStocks.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
-				System.out.println("买一净比前" + TOP_NUM + "的是 : ");
-				printStocks(topAbsoluteAskRatioStocks.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
-				System.out.println("===========================================================================");
-				System.out.println("\n\n");
-				recentStocksMap.clear();
+				if(!recentStocksMap.isEmpty()){
+					TopAmountStocks topAmountStockCal = new TopAmountStocks();
+					TopAbsoluteAskStocks topAbsoluteAskStocks = new TopAbsoluteAskStocks();
+					TopAbsoluteAskRatioStocks topAbsoluteAskRatioStocks = new TopAbsoluteAskRatioStocks();
+					System.out.println("===========================================================================");
+					System.out.println("成交量前" + TOP_NUM + "的是 : ");
+					printStocks(topAmountStockCal.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
+					System.out.println("买一净值前" + TOP_NUM + "的是 : ");
+					printStocks(topAbsoluteAskStocks.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
+					System.out.println("买一净比前" + TOP_NUM + "的是 : ");
+					printStocks(topAbsoluteAskRatioStocks.getTopStocks(TOP_NUM, recentStocksMap), recentStocksMap);
+					System.out.println("===========================================================================");
+					System.out.println("\n\n");
+					recentStocksMap.clear();
+				}
 				try {
 					Thread.sleep(TOP_NUM * MINUTE / 2);
 				} catch (InterruptedException e) {
