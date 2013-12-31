@@ -22,20 +22,22 @@ public class StockCache {
 	public final static int SH_STOCK_CACHE_NUM = 1000;
 	public final static int ZH_STOCK_CACHE_NUM = 1500;
 
-	public static Calendar persisFinishedTime = Calendar.getInstance();
+	public static Calendar lastPersistenceTime = Calendar.getInstance();
 
 	// since every fixed time , there will be some stock data stores to DB.this
 	// map stores the index of every stock.
-	public static Map<String, Integer[]> persistenceIndexer = new HashMap<>();
+	public static Map<String, Integer[]> allStocksPersistenceIndexer = new HashMap<>();
 
 	public static final Map<String, List<Stock>> ALL_STOCKS_CACHE = new ConcurrentHashMap<>();
 
-	public static final Map<String, Boolean> ALL_STOCK_NEED_SAVED_MARKER = new ConcurrentHashMap<>();
+	public static final Map<String, Boolean> ALL_STOCK_PERSISTENCE_IDENTIFIER = new ConcurrentHashMap<>();
 
 	public static final List<String> ALL_STOCK_ID = new ArrayList<>();
 
 	public static void cleanCache() {
-		persistenceIndexer.clear();
+		allStocksPersistenceIndexer.clear();
+		ALL_STOCKS_CACHE.clear();
+		ALL_STOCK_PERSISTENCE_IDENTIFIER.clear();
 	}
 
 	public static Map<String, List<Stock>> getStocksInPreviousTime(Map<String, List<Stock>> allStocksCache, long timeInterval) {

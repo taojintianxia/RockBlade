@@ -20,15 +20,15 @@ public class CacheToDB extends TimerTask {
 	@Override
 	public void run() {
 		try {
-			
+
 			final CacheToDBPersistence cacheToDB = new CacheToDBPersistence();
 			while (true) {
 				if (StockUtil.isInTradingTime()) {
 					cacheToDB.saveStocks(StockCache.ALL_STOCKS_CACHE);
-					if (StockUtil.isInMiddayNoneTradingTime(StockCache.persisFinishedTime)) {
+					if (StockUtil.isInMiddayNoneTradingTime(StockCache.lastPersistenceTime)) {
 						StockCache.cleanCache();
 					}
-					Thread.sleep(10 * StockUtil.MINUTE);
+					Thread.sleep(2 * StockUtil.MINUTE);
 				} else if (StockUtil.isInMiddayNoneTradingTime()) {
 					Calendar currentTime = Calendar.getInstance();
 					Thread.sleep(StockUtil.AFTERNOON_START.getTimeInMillis() - currentTime.getTimeInMillis());

@@ -51,7 +51,7 @@ public class CalculaterCenterInvoker extends TimerTask {
 					recentStocksMap.clear();
 				}
 				try {
-					Thread.sleep(TOP_NUM * MINUTE / 2);
+					Thread.sleep(MINUTE);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

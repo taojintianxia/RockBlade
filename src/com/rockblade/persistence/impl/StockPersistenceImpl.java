@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,29 +36,28 @@ public class StockPersistenceImpl {
 
 	}
 
-	public void saveStockByIndex(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
-		Map<String, List<Stock>> expectToSaveStocksMap = new HashMap<>();
-		for (Map.Entry<String, List<Stock>> entry : stockMap.entrySet()) {
-			if (stockMapIndexer.get(entry.getKey()) != null) {
-				List<Stock> stockList = entry.getValue();
-				int start = stockMapIndexer.get(entry.getKey())[0];
-				int end = stockMapIndexer.get(entry.getKey())[1];
+	public void saveStockByIndex(Map<String, List<Stock>> allStocksCache, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
+		for (Map.Entry<String, List<Stock>> entry : allStocksCache.entrySet()) {
+			String stockId = entry.getKey();
+			if (stockMapIndexer.get(stockId) != null) {
+
+				int start = stockMapIndexer.get(stockId)[0];
+				int end = stockMapIndexer.get(stockId)[1];
 				Boolean needToBeSaved = stockSaverMarker.get(entry.getKey());
 				needToBeSaved = needToBeSaved == null ? false : needToBeSaved;
+
 				if (!needToBeSaved) {
 					continue;
 				}
 
-				List<Stock> segmentStocks = new ArrayList<>();
-				segmentStocks.addAll(stockList.subList(start, end));
-				expectToSaveStocksMap.put(entry.getKey(), segmentStocks);
-				saveStocks(stockMap, stockMapIndexer, stockSaverMarker, INSERT_STOCK_DETAIL_SQL);
-				Integer[] tempIndexer = new Integer[2];
-				tempIndexer[0] = tempIndexer[1] = end;
-				stockMapIndexer.put(entry.getKey(), tempIndexer);
+				List<Stock> stockList = entry.getValue();
+				for (int i = start; i <= end; i++) {
+					saveStock(stockList.get(i), INSERT_STOCK_DETAIL_SQL);
+				}
 			}
 		}
 
+		StockCache.lastPersistenceTime.setTime(new Date());
 	}
 
 	public void saveLastStockRecord(Map<String, List<Stock>> stockMap, Map<String, Integer[]> stockMapIndexer, Map<String, Boolean> stockSaverMarker) throws SQLException {
@@ -78,13 +76,20 @@ public class StockPersistenceImpl {
 						stmt.execute();
 					}
 				} catch (Exception e) {
-					System.out.println(stockList.get(stockSize-1));
+					System.out.println("error : " + e);
+					System.out.println(stockList.get(stockSize - 1));
 				}
 				stockList.clear();
 			}
 		}
 
-		StockCache.persisFinishedTime.setTime(new Date());
+		StockCache.lastPersistenceTime.setTime(new Date());
+	}
+
+	private void saveStock(Stock stock, String SQL) throws SQLException {
+		PreparedStatement stmt = conn.prepareStatement(SQL);
+		transferStockToPreparedStatment(stock, stmt);
+		stmt.execute();
 	}
 
 	public void saveStock(Map<String, Stock> stockMap) throws SQLException {
