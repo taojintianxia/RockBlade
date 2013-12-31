@@ -31,7 +31,6 @@ public class CacheToDBPersistence implements StockPersistence {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void updateCacheIndexer(Map<String, List<Stock>> stockCache) {
@@ -42,7 +41,7 @@ public class CacheToDBPersistence implements StockPersistence {
 					Integer[] stockPersistenceIndexer = new Integer[2];
 					stockPersistenceIndexer[0] = 0;
 					stockPersistenceIndexer[1] = 0;
-					
+
 					List<Stock> tmpList = entry.getValue();
 					if (!tmpList.isEmpty()) {
 						stockPersistenceIndexer[1] = tmpList.size() - 1;
